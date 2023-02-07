@@ -1,54 +1,22 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
-import {Header, Grid, Divider, Segment, Button, Container, Form, Input, Dropdown, Select} from 'semantic-ui-react';
+import {Header, Grid, Divider, Segment, Button, Container, Form, Input, Dropdown, Select, Icon} from 'semantic-ui-react';
+
+/*Type qui peut prendre uniquement les chaines de caractères "text" "youtube" "movie" et "pdf"*/
+type buttonCategory = "text" | "youtube" | "movie" | "pdf";
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [category, setCategory] = useState<buttonCategory | undefined>();
 
   return (
     <>
-    <Grid>
-      <Grid.Row/>
-      <Grid.Column width={2}/>
-      <Grid.Column width={12}>
-        <Container textAlign='center'>
-      <Header  size="huge">Bonjour,</Header>
-      <Header size='large'>Je veux :</Header>
-        </Container>
-
-      <Segment basic>
-        <Segment basic padded>
-            <Grid columns={2} relaxed stackable>
-              <Grid.Column>
-                <Form>
-                  <Form.Field>
-                    <label>Texte, Vidéo, Document ...</label>
-                    <Input>
-                      <Select fluid options={[]}></Select>
-                    </Input>
-                  </Form.Field>
-                </Form>
-              </Grid.Column>
-              <Grid.Column>
-                <Form>
-                  <Form.Field>
-                    <label>Mon niveau est :</label>
-                    <Input>
-                      <Select defaultValue={"unknowed"} fluid options={[{key : "unknowed", text :"Je ne connais pas mon niveau", value : "unknowed"}]}></Select>
-                    </Input>
-                  </Form.Field>
-                </Form>
-              </Grid.Column>
-            </Grid>
-            <Divider vertical>ET</Divider>
-        </Segment>
-        <Container textAlign='center'>
-          <Button color='green'>C'est parti</Button>
-        </Container>
-      </Segment>
-      </Grid.Column>
-      <Grid.Column width={2}/>
-      </Grid>
+    <Button.Group widths={4}>
+      <Button active={category === "text"} onClick={() => setCategory("text")}><Icon name='keyboard outline'/>Texte</Button>
+      <Button active={category === "youtube"} onClick={() => setCategory("youtube")}><Icon name='youtube'/> Lien YouTube</Button>
+      <Button active={category === "movie"} onClick={() => setCategory("movie")}><Icon name='film'/>Film / Série</Button>
+      <Button active={category === "pdf"} onClick={() => setCategory("pdf")}><Icon name='file pdf outline'/>Document PDF</Button>
+    </Button.Group>
     </>
   )
 }
