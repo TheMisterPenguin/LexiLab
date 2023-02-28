@@ -9,8 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "framer-motion": "^10.0.1",
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^3.4.120",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
+    "react-router-dom": "^6.8.1",
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.4"
   },
