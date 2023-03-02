@@ -25,7 +25,8 @@ const PDFConversion = () => {
                     <Icon name="file pdf outline" color={iconColor}/>
                     {displayFileName}
                 </Header>
-                <Button onClick={() => inputRef.current.click()} color="black">
+                {/* @ts-ignore*/}
+                <Button onClick={() => inputRef.current?.click()} color="black">
                     <input ref={inputRef} type="file" style={{display : "none"}} accept="application/pdf" onChange={handleFileUpload}/>
                     Sélection</Button>
             </Segment>
