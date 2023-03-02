@@ -5,7 +5,10 @@ import TextConversion from "./TextConversion";
 import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import PDFConversion from "./PDFConversion";
 import logo from "./assets/logo_2.svg";
+import MovieConversion from "./MovieConversion";
+import YoutubeConversion from "./YoutubeConversion";
 import {Helmet} from "react-helmet";
+
 /*Type qui peut prendre uniquement les chaines de caractères "text" "youtube" "movie" et "pdf"*/
 type buttonCategory = "text" | "youtube" | "movie" | "pdf";
 
@@ -57,8 +60,7 @@ function App() {
 									setCategory("text");
 									navigate("/texte");
 								}}>
-								<Icon name="keyboard outline" />
-								Texte
+								<Icon name="keyboard outline" /> Texte
 							</Button>
 							<Button
 								size="big"
@@ -76,8 +78,7 @@ function App() {
 									setCategory("movie");
 									navigate("/film-serie");
 								}}>
-								<Icon name="film" />
-								Film / Série
+								<Icon name="film" /> Film / Série
 							</Button>
 							<Button
 								size="big"
@@ -86,12 +87,13 @@ function App() {
 									setCategory("pdf");
 									navigate("/pdf");
 								}}>
-								<Icon name="file pdf outline" />
-								Document PDF
+								<Icon name="file pdf outline" /> Document PDF
 							</Button>
 						</Button.Group>
 						<Routes>
 							<Route path="texte" element={<TextConversion />} />
+							<Route path="youtube" element={<YoutubeConversion />} />
+							<Route path="film-serie" element={<MovieConversion />} />
 							<Route path="pdf" element={<PDFConversion />} />
 						</Routes>
 					</Grid.Column>
