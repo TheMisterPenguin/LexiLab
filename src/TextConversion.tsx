@@ -1,4 +1,4 @@
-import { Segment, TextArea, Form, Button } from "semantic-ui-react"
+import {Segment, TextArea, Form, Button} from "semantic-ui-react"
 import {Helmet} from "react-helmet";
 
 const TextConversion = () => {
@@ -11,7 +11,7 @@ const TextConversion = () => {
                 <Form>
                 <Form.Field>
                     <label>Saisir votre texte :</label>
-                    <TextArea rows={10}></TextArea>
+                    <TextArea rows={6}></TextArea>
                 </Form.Field>
                 </Form>
                 <Segment basic textAlign="center">
