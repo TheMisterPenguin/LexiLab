@@ -28,7 +28,7 @@ const MovieConversion = () => {
     return (
         <>
             <Helmet>
-                <title>Movie - LexiLab</title>
+                <title>Films / Séries - LexiLab</title>
             </Helmet>
 
             <Segment>
