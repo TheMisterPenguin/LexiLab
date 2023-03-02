@@ -1,6 +1,5 @@
 import {useRef, useState} from "react";
 import {Header, Segment, Icon, Button} from "semantic-ui-react";
-import * as PDF from "pdfjs-dist";
 import {Helmet} from "react-helmet";
 
 type PDFContent = {
@@ -9,15 +8,14 @@ type PDFContent = {
 };
 
 function PDF2Text(file: File) {
-    PDF.GlobalWorkerOptions.workerSrc = "../node_modules/pdfjs-dist/build/pdf.worker.js";
-
 	const document: PDFContent = {filename: "", pages: []};
 	document.filename = file.name;
 	const convert = async (): Promise<void> => {
 		// On récupère le contenu du fichier
 		const buffer = await file.arrayBuffer();
 		// On récupère le contenu du document PDF
-		const pdf = await PDF.getDocument(buffer).promise;
+        // @ts-ignore
+		const pdf = await pdfjsLib.getDocument(buffer).promise;
         console.log(pdf.numPages);
 		// On lit toutes les pages
 		for (let i = 1; i < pdf.numPages; i++) {
