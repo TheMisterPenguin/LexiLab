@@ -52,7 +52,7 @@ function MovieCard(props: { movie: { title: string, image: string, description: 
             </Segment>
             
             <Card.Group className="movie-list">
-                {movies.slice(0, 4).map(movie => (
+                {movies.map(movie => (
                 <MovieCard movie={{ title: movie.title, image: movie.image, description: movie.description }} />
                 ))}
             </Card.Group>
