@@ -1,13 +1,13 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
-import {Header, Grid, Divider, Segment, Button, Container, Form, Input, Dropdown, Select, Icon, Image} from "semantic-ui-react";
+import { Header, Grid, Divider, Segment, Button, Container, Form, Input, Dropdown, Select, Icon, Image } from "semantic-ui-react";
 import TextConversion from "./TextConversion";
-import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import PDFConversion from "./PDFConversion";
 import logo from "./assets/logo_2.svg";
 import MovieConversion from "./MovieConversion";
 import YoutubeConversion from "./YoutubeConversion";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 
 /*Type qui peut prendre uniquement les chaines de caractères "text" "youtube" "movie" et "pdf"*/
 type buttonCategory = "text" | "youtube" | "movie" | "pdf";
@@ -90,6 +90,13 @@ function App() {
 								<Icon name="file pdf outline" /> Document PDF
 							</Button>
 						</Button.Group>
+
+					</Grid.Column>
+					<Grid.Column width={2} />
+				</Grid.Row>
+				<Grid.Row textAlign="center">
+					<Grid.Column width={1} />
+					<Grid.Column width={14} textAlign="center">
 						<Routes>
 							<Route path="texte" element={<TextConversion />} />
 							<Route path="youtube" element={<YoutubeConversion />} />
@@ -97,7 +104,7 @@ function App() {
 							<Route path="pdf" element={<PDFConversion />} />
 						</Routes>
 					</Grid.Column>
-					<Grid.Column width={2} />
+					<Grid.Column width={1} />
 				</Grid.Row>
 			</Grid>
 		</>
