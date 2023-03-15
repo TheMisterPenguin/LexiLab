@@ -9,41 +9,10 @@ import MovieConversion from "./MovieConversion";
 import YoutubeConversion from "./YoutubeConversion";
 import { Helmet } from "react-helmet";
 import "./App.css";
+import Login from "./Login";
 
 /*Type qui peut prendre uniquement les chaines de caractères "text" "youtube" "movie" et "pdf"*/
 type buttonCategory = "text" | "youtube" | "movie" | "pdf";
-
-function Login() {
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-  
-	const handleSubmit = () => {
-	  console.log(`Identifiant: ${username} | Mot de passe: ${password}`);
-	  // Vous pouvez ici faire une requête pour vérifier les identifiants et mot de passe
-	};
-  
-	return (
-	  <Form onSubmit={handleSubmit}>
-		<Form.Field>
-		  <label>Identifiant</label>
-		  <Input
-			type="text"
-			value={username}
-			onChange={(e) => setUsername(e.target.value)}
-		  />
-		</Form.Field>
-		<Form.Field>
-		  <label>Mot de passe</label>
-		  <Input
-			type="password"
-			value={password}
-			onChange={(e) => setPassword(e.target.value)}
-		  />
-		</Form.Field>
-		<Button type="submit">Se connecter</Button>
-	  </Form>
-	);
-  }
 
 function getSelectedCategory(): buttonCategory | undefined {
 	const location = window.location.pathname;
@@ -55,6 +24,15 @@ function getSelectedCategory(): buttonCategory | undefined {
 
 function App() {
 	const [category, setCategory] = useState<buttonCategory | undefined>();
+	const [isLoginOpen, setIsLoginOpen] = useState(false);
+
+  	const handleLoginClick = () => {
+    	setIsLoginOpen(true);
+  	};
+
+  	const handleLoginClose = () => {
+    	setIsLoginOpen(false);
+  	};
 
 	useEffect(() => {
 		setCategory(getSelectedCategory());
@@ -72,7 +50,9 @@ function App() {
 				<Grid.Row />
 				<Grid.Row>
 					<Grid.Column width={16}>
-  						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onSubmit={Login}>Se connecter</Button>
+  						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onClick={handleLoginClick}>
+    						Se connecter
+  						</Button><Login isOpen={isLoginOpen} onClose={handleLoginClose} />
 					</Grid.Column>
 				</Grid.Row>
 				<Grid.Row>
