@@ -8,9 +8,42 @@ import logo from "./assets/logo_2.svg";
 import MovieConversion from "./MovieConversion";
 import YoutubeConversion from "./YoutubeConversion";
 import { Helmet } from "react-helmet";
+import "./App.css";
 
 /*Type qui peut prendre uniquement les chaines de caractères "text" "youtube" "movie" et "pdf"*/
 type buttonCategory = "text" | "youtube" | "movie" | "pdf";
+
+function Login() {
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+  
+	const handleSubmit = () => {
+	  console.log(`Identifiant: ${username} | Mot de passe: ${password}`);
+	  // Vous pouvez ici faire une requête pour vérifier les identifiants et mot de passe
+	};
+  
+	return (
+	  <Form onSubmit={handleSubmit}>
+		<Form.Field>
+		  <label>Identifiant</label>
+		  <Input
+			type="text"
+			value={username}
+			onChange={(e) => setUsername(e.target.value)}
+		  />
+		</Form.Field>
+		<Form.Field>
+		  <label>Mot de passe</label>
+		  <Input
+			type="password"
+			value={password}
+			onChange={(e) => setPassword(e.target.value)}
+		  />
+		</Form.Field>
+		<Button type="submit">Se connecter</Button>
+	  </Form>
+	);
+  }
 
 function getSelectedCategory(): buttonCategory | undefined {
 	const location = window.location.pathname;
@@ -30,14 +63,21 @@ function App() {
 	const navigate = useNavigate();
 	return (
 		<>
+
 			<Helmet>
 				<title>LexiLab</title>
 			</Helmet>
 			<Grid>
 				<Grid.Row />
 				<Grid.Row />
-				<Grid.Row />
 				<Grid.Row>
+					<Grid.Column width={16}>
+  						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onSubmit={Login}>Se connecter</Button>
+					</Grid.Column>
+				</Grid.Row>
+				<Grid.Row>
+				</Grid.Row>
+				<Grid.Row >
 					<Image centered src={logo} size="medium" wrapped />
 				</Grid.Row>
 				<Grid.Row>
