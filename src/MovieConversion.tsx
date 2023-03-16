@@ -68,6 +68,7 @@ function SearchMovies() {
         <Grid.Column width={14}>
           <Card.Group itemsPerRow={3}>
             {movies.map(movie => (
+              movie.image && //Vérifie si l'image existe
               <MovieCard key={movie.id} movie={{ id: movie.id, title: movie.title, image: movie.image, description: movie.description }} />
             ))}
           </Card.Group>
