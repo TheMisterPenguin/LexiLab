@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import './App.css';
-import { Card, Image, Segment, Form, Button, Loader } from 'semantic-ui-react';
+import { Card, Image, Segment, Form, Button, Loader , Grid } from 'semantic-ui-react';
 import { Helmet } from 'react-helmet';
 
-function MovieCard(props: { movie: { title: string, image: string, description: string } }) {
+function MovieCard(props: { movie: {id: string, title: string, image: string, description: string } }) {
   const { movie } = props;
   return (
-    <Card>
+    <Card key={movie.id}>
       <Image src={movie.image} alt={movie.title} wrapped ui={false} />
       <Card.Content>
         <Card.Header>{movie.title}</Card.Header>
@@ -18,7 +18,7 @@ function MovieCard(props: { movie: { title: string, image: string, description: 
 
 function SearchMovies() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [movies, setMovies] = useState<{ title: string, image: string, description: string }[]>([]);
+  const [movies, setMovies] = useState<{ id: string, title: string, image: string, description: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = () => {
@@ -64,13 +64,18 @@ function SearchMovies() {
         </Segment>
       </Segment>
 
-      <Card.Group className="movie-list">
-        {movies.map(movie => (
-          <MovieCard movie={{ title: movie.title, image: movie.image, description: movie.description }} />
-        ))}
-      </Card.Group>
+      <Grid centered>
+        <Grid.Column width={14}>
+          <Card.Group itemsPerRow={3}>
+            {movies.map(movie => (
+              <MovieCard key={movie.id} movie={{ id: movie.id, title: movie.title, image: movie.image, description: movie.description }} />
+            ))}
+          </Card.Group>
+        </Grid.Column>
+      </Grid>
     </>
   );
+
 }
 
 export default SearchMovies;
