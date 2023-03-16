@@ -3,7 +3,14 @@ import './App.css';
 import { Card, Image, Segment, Form, Button, Loader , Grid } from 'semantic-ui-react';
 import { Helmet } from 'react-helmet';
 
-function MovieCard(props: { movie: {id: string, title: string, image: string, description: string } }) {
+interface Movie {
+  id: string;
+  title: string;
+  image: string;
+  description: string;
+}
+
+function MovieCard(props: { movie: Movie }) {
   const { movie } = props;
   return (
     <Card key={movie.id}>
@@ -18,7 +25,7 @@ function MovieCard(props: { movie: {id: string, title: string, image: string, de
 
 function SearchMovies() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [movies, setMovies] = useState<{ id: string, title: string, image: string, description: string }[]>([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = () => {
@@ -28,12 +35,12 @@ function SearchMovies() {
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        const movies = data.results;
-        const maxMultipleOfThree = Math.floor(movies.length / 3) * 3;
-        const topMovies = movies.slice(0, maxMultipleOfThree);
+        const moviesWithImages = data.results.filter(movie => movie.image);
+        const maxMultipleOfThree = Math.floor(moviesWithImages.length / 3) * 3;
+        const topMovies = moviesWithImages.slice(0, maxMultipleOfThree);
         setMovies(topMovies);
         setIsLoading(false);
-      });
+      });  
   };
 
   return (
@@ -68,15 +75,13 @@ function SearchMovies() {
         <Grid.Column width={14}>
           <Card.Group itemsPerRow={3}>
             {movies.map(movie => (
-              movie.image && //Vérifie si l'image existe
-              <MovieCard key={movie.id} movie={{ id: movie.id, title: movie.title, image: movie.image, description: movie.description }} />
+                <MovieCard key={movie.id} movie={movie} />
             ))}
           </Card.Group>
         </Grid.Column>
       </Grid>
     </>
   );
-
 }
 
 export default SearchMovies;
