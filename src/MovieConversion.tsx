@@ -28,7 +28,10 @@ function SearchMovies() {
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        setMovies(data.results);
+        const movies = data.results;
+        const maxMultipleOfThree = Math.floor(movies.length / 3) * 3;
+        const topMovies = movies.slice(0, maxMultipleOfThree);
+        setMovies(topMovies);
         setIsLoading(false);
       });
   };
