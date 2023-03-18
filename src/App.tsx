@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
 import { Header, Grid, Divider, Segment, Button, Container, Form, Input, Dropdown, Select, Icon, Image } from "semantic-ui-react";
 import TextConversion from "./TextConversion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
@@ -26,13 +25,13 @@ function App() {
 	const [category, setCategory] = useState<buttonCategory | undefined>();
 	const [isLoginOpen, setIsLoginOpen] = useState(false);
 
-  	const handleLoginClick = () => {
-    	setIsLoginOpen(true);
-  	};
-
-  	const handleLoginClose = () => {
-    	setIsLoginOpen(false);
-  	};
+	const handleLoginClick = () => {
+	  setIsLoginOpen(true);
+	};
+  
+	const handleLoginClose = () => {
+	  setIsLoginOpen(false);
+	};
 
 	useEffect(() => {
 		setCategory(getSelectedCategory());
@@ -50,9 +49,14 @@ function App() {
 				<Grid.Row />
 				<Grid.Row>
 					<Grid.Column width={16}>
-  						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onClick={handleLoginClick}>
-    						Se connecter
-  						</Button><Login isOpen={isLoginOpen} onClose={handleLoginClose} />
+					<Button
+						floated="right"
+						style={{ backgroundColor: "#FFB155", color: "white" }}
+						onClick={handleLoginClick}
+					>
+						Se connecter
+					</Button>
+					<Login isOpen={isLoginOpen} onClose={handleLoginClose} />
 					</Grid.Column>
 				</Grid.Row>
 				<Grid.Row>
@@ -72,7 +76,7 @@ function App() {
 				<Grid.Row>
 					<Grid.Column width={2} />
 					<Grid.Column width={12}>
-						<Button.Group widths={4} className="category-buttons">
+						<Button.Group widths={4}>
 							<Button
 								size="big"
 								active={category === "text"}
@@ -80,7 +84,7 @@ function App() {
 									setCategory("text");
 									navigate("/texte");
 								}}>
-								<Icon name="keyboard outline" /> <span className="button-text">Texte</span>
+								<Icon name="keyboard outline" /> Texte
 							</Button>
 							<Button
 								size="big"
@@ -89,7 +93,7 @@ function App() {
 									setCategory("youtube");
 									navigate("/youtube");
 								}}>
-								<Icon name="youtube" /> <span className="button-text">Lien YouTube</span>
+								<Icon name="youtube" /> Lien YouTube
 							</Button>
 							<Button
 								size="big"
@@ -98,7 +102,7 @@ function App() {
 									setCategory("movie");
 									navigate("/film-serie");
 								}}>
-								<Icon name="film" /> <span className="button-text">Film / Série</span>
+								<Icon name="film" /> Film / Série
 							</Button>
 							<Button
 								size="big"
@@ -107,7 +111,7 @@ function App() {
 									setCategory("pdf");
 									navigate("/pdf");
 								}}>
-								<Icon name="file pdf outline" /> <span className="button-text">Document PDF</span>
+								<Icon name="file pdf outline" /> Document PDF
 							</Button>
 						</Button.Group>
 
