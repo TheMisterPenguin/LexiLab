@@ -1,13 +1,14 @@
 import {useEffect, useState} from "react";
-import reactLogo from "./assets/react.svg";
 import {Header, Grid, Divider, Segment, Button, Container, Form, Input, Dropdown, Select, Icon, Image} from "semantic-ui-react";
-import TextConversion from "./TextConversion";
 import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
-import PDFConversion from "./PDFConversion";
 import logo from "./assets/logo_2.svg";
-import MovieConversion from "./MovieConversion";
+import TextConversion from "./TextConversion";
 import YoutubeConversion from "./YoutubeConversion";
+import MovieConversion from "./MovieConversion";
+import PDFConversion from "./PDFConversion";
 import {Helmet} from "react-helmet";
+import './style.css';
+
 
 /*Type qui peut prendre uniquement les chaines de caractères "text" "youtube" "movie" et "pdf"*/
 type buttonCategory = "text" | "youtube" | "movie" | "pdf";
@@ -52,7 +53,7 @@ function App() {
 				<Grid.Row>
 					<Grid.Column width={2} />
 					<Grid.Column width={12}>
-						<Button.Group widths={4}>
+						<Button.Group widths={4} className="category-buttons">
 							<Button
 								size="big"
 								active={category === "text"}
@@ -60,7 +61,7 @@ function App() {
 									setCategory("text");
 									navigate("/texte");
 								}}>
-								<Icon name="keyboard outline" /> Texte
+								<Icon name="keyboard outline" /> <span className="button-text">Texte</span>
 							</Button>
 							<Button
 								size="big"
@@ -69,7 +70,7 @@ function App() {
 									setCategory("youtube");
 									navigate("/youtube");
 								}}>
-								<Icon name="youtube" /> Lien YouTube
+								<Icon name="youtube" /> <span className="button-text">Lien YouTube</span>
 							</Button>
 							<Button
 								size="big"
@@ -78,7 +79,7 @@ function App() {
 									setCategory("movie");
 									navigate("/film-serie");
 								}}>
-								<Icon name="film" /> Film / Série
+								<Icon name="film" /> <span className="button-text">Film / Série</span>
 							</Button>
 							<Button
 								size="big"
@@ -87,7 +88,7 @@ function App() {
 									setCategory("pdf");
 									navigate("/pdf");
 								}}>
-								<Icon name="file pdf outline" /> Document PDF
+								<Icon name="file pdf outline" /> <span className="button-text">Document PDF</span>
 							</Button>
 						</Button.Group>
 						<Routes>
