@@ -1,14 +1,15 @@
-import {useEffect, useState} from "react";
-import {Header, Grid, Divider, Segment, Button, Container, Form, Input, Dropdown, Select, Icon, Image} from "semantic-ui-react";
-import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
-import logo from "./assets/logo_2.svg";
+import { useEffect, useState } from "react";
+import reactLogo from "./assets/react.svg";
+import { Header, Grid, Divider, Segment, Button, Container, Form, Input, Dropdown, Select, Icon, Image } from "semantic-ui-react";
 import TextConversion from "./TextConversion";
-import YoutubeConversion from "./YoutubeConversion";
-import MovieConversion from "./MovieConversion";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import PDFConversion from "./PDFConversion";
-import {Helmet} from "react-helmet";
-import './style.css';
-
+import logo from "./assets/logo_2.svg";
+import MovieConversion from "./MovieConversion";
+import YoutubeConversion from "./YoutubeConversion";
+import { Helmet } from "react-helmet";
+import "./App.css";
+import Login from "./Login";
 
 /*Type qui peut prendre uniquement les chaines de caractères "text" "youtube" "movie" et "pdf"*/
 type buttonCategory = "text" | "youtube" | "movie" | "pdf";
@@ -23,6 +24,15 @@ function getSelectedCategory(): buttonCategory | undefined {
 
 function App() {
 	const [category, setCategory] = useState<buttonCategory | undefined>();
+	const [isLoginOpen, setIsLoginOpen] = useState(false);
+
+  	const handleLoginClick = () => {
+    	setIsLoginOpen(true);
+  	};
+
+  	const handleLoginClose = () => {
+    	setIsLoginOpen(false);
+  	};
 
 	useEffect(() => {
 		setCategory(getSelectedCategory());
@@ -31,14 +41,23 @@ function App() {
 	const navigate = useNavigate();
 	return (
 		<>
+
 			<Helmet>
 				<title>LexiLab</title>
 			</Helmet>
 			<Grid>
 				<Grid.Row />
 				<Grid.Row />
-				<Grid.Row />
 				<Grid.Row>
+					<Grid.Column width={16}>
+  						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onClick={handleLoginClick}>
+    						Se connecter
+  						</Button><Login isOpen={isLoginOpen} onClose={handleLoginClose} />
+					</Grid.Column>
+				</Grid.Row>
+				<Grid.Row>
+				</Grid.Row>
+				<Grid.Row >
 					<Image centered src={logo} size="medium" wrapped />
 				</Grid.Row>
 				<Grid.Row>
@@ -53,7 +72,7 @@ function App() {
 				<Grid.Row>
 					<Grid.Column width={2} />
 					<Grid.Column width={12}>
-						<Button.Group widths={4} className="category-buttons">
+						<Button.Group widths={4}>
 							<Button
 								size="big"
 								active={category === "text"}
@@ -91,6 +110,13 @@ function App() {
 								<Icon name="file pdf outline" /> <span className="button-text">Document PDF</span>
 							</Button>
 						</Button.Group>
+
+					</Grid.Column>
+					<Grid.Column width={2} />
+				</Grid.Row>
+				<Grid.Row textAlign="center">
+					<Grid.Column width={1} />
+					<Grid.Column width={14} textAlign="center">
 						<Routes>
 							<Route path="texte" element={<TextConversion />} />
 							<Route path="youtube" element={<YoutubeConversion />} />
@@ -98,7 +124,7 @@ function App() {
 							<Route path="pdf" element={<PDFConversion />} />
 						</Routes>
 					</Grid.Column>
-					<Grid.Column width={2} />
+					<Grid.Column width={1} />
 				</Grid.Row>
 			</Grid>
 		</>
