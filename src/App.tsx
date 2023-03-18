@@ -72,7 +72,7 @@ function App() {
 				<Grid.Row>
 					<Grid.Column width={2} />
 					<Grid.Column width={12}>
-						<Button.Group widths={4}>
+						<Button.Group widths={4} className="category-buttons">
 							<Button
 								size="big"
 								active={category === "text"}
