@@ -53,6 +53,22 @@ function getSelectedCategory(): buttonCategory | undefined {
 	if (location.startsWith("/pdf")) return "pdf";
 }
 
+function test() {
+	const data = {
+		name: "Utilisateur" + Math.floor(Math.random() * 100),
+		age: Math.floor(Math.random() * (65 - 18 + 1)) + 18,
+		pays: "France"
+	};
+	fetch("http://localhost:3001/api/parseText", {
+		headers: {
+			"Content-Type": "text/plain",
+			"Access-Control-Allow-Origin": "*",
+		},
+		body: JSON.stringify(data),
+		method: "POST",
+	});
+}
+
 function App() {
 	const [category, setCategory] = useState<buttonCategory | undefined>();
 
@@ -72,7 +88,7 @@ function App() {
 				<Grid.Row />
 				<Grid.Row>
 					<Grid.Column width={16}>
-  						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onSubmit={Login}>Se connecter</Button>
+  						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onClick={(e) => test()}>Se connecter</Button>
 					</Grid.Column>
 				</Grid.Row>
 				<Grid.Row>
