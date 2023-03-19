@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
     "framer-motion": "^10.0.1",
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^3.4.120",
@@ -17,9 +18,11 @@
     "react-helmet": "^6.1.0",
     "react-router-dom": "^6.8.1",
     "semantic-ui-css": "^2.5.0",
-    "semantic-ui-react": "^2.1.4"
+    "semantic-ui-react": "^2.1.4",
+    "youtube-transcript": "^1.0.4"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.0",
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
     "@types/react-helmet": "^6.1.6",
