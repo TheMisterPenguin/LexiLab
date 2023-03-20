@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.12",
     "framer-motion": "^10.0.1",
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^3.4.120",
