@@ -115,8 +115,8 @@ function App() {
 					<Grid.Column width={2} />
 				</Grid.Row>
 				<Grid.Row textAlign="center">
-					<Grid.Column width={1} />
-					<Grid.Column width={14} textAlign="center">
+					<Grid.Column width={2} />
+					<Grid.Column width={12} textAlign="center">
 						<Routes>
 							<Route path="texte" element={<TextConversion />} />
 							<Route path="youtube" element={<YoutubeConversion />} />
@@ -124,7 +124,7 @@ function App() {
 							<Route path="pdf" element={<PDFConversion />} />
 						</Routes>
 					</Grid.Column>
-					<Grid.Column width={1} />
+					<Grid.Column width={2} />
 				</Grid.Row>
 			</Grid>
 		</>
