@@ -1,7 +1,6 @@
-import {useRef, useState, useEffect, useId} from "react";
-import { Segment, Form, Input, Button, Image } from 'semantic-ui-react';
+import {useState, useEffect} from "react";
+import { Segment, Form, Input, Button, Image, Grid,Loader } from 'semantic-ui-react';
 import {Helmet} from "react-helmet";
-import * as cheerio from 'cheerio';
 import YoutubeTranscript from 'youtube-transcript';
 
 
@@ -17,15 +16,15 @@ function getVideoId(url : string) {
       return match[1];
     else
       return null;
-  }
+}
 
 
 const YoutubeConversion = () => {
     const [url, setUrl] = useState<string>('');
-    const [processingVideo, setVideoProcessing] = useState<boolean>(false);
     const [videoId, setVideoId] = useState<string | null>(null);
     const [thumbnail, setThumbnail] = useState<string | undefined>(undefined);
-    const [videoTitle, setVideoTitle] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
 
     // actualiation de la miniature de la vidéo youtube
     async function updateThumbnail() {
@@ -52,22 +51,8 @@ const YoutubeConversion = () => {
 
     async function extractVideo(){
         if (url !== '') {
-            try {
-                const response = await fetch(`https://api.allorigins.win/get?url=${url}`);
-                const html = await response.text().then((text) => {
-                    const $ = cheerio.load(text);
-                    const title = $('title').text();
-                    console.log(title);
-                    setVideoTitle(title);
-                });
-                //const $ = cheerio.load(html);
-                //const title = $('title').text();
-                //setVideoTitle(title);
-
-                setVideoId(getVideoId(url));
-            } catch (error) {
-                console.error(error);
-            }
+            setIsLoading(true);
+            setVideoId(getVideoId(url));
         }
     }
 
@@ -76,23 +61,30 @@ const YoutubeConversion = () => {
             <Helmet>
                 <title>Youtube - LexiLab</title>
             </Helmet>
-
             <Segment>
-                <Form>
-                    <Form.Field>
-                        <label>Saisir votre lien youtube :</label>
-                        <Input type="url" onChange={InputChange} focus placeholder='Colle le lien de la vidéo ici...'/>
-                    </Form.Field>
-                    <div id="video">
-                        <Image  src={thumbnail} style={{ width: "200px", height: "auto" }}  />
-                        <h4>{videoTitle}</h4>
-                    </div>
-                </Form>
-
-                <Segment basic textAlign="center">
-                    <Button primary onClick={() => {extractVideo();}} >Extraire</Button>
-                </Segment>
-
+                <Grid columns={videoId === null ? 1 : 2}>  
+                    <Grid.Row verticalAlign="middle">
+                       {videoId === null ? <></> : <Grid.Column width={7}>
+                            <Image  src={thumbnail} width={300}  />
+                        </Grid.Column>}
+    
+                        <Grid.Column>
+                                <Form>
+                                    <Form.Field>
+                                        <label>Saisir votre lien youtube :</label>
+                                        <Input type="url" onChange={InputChange} focus placeholder='Colle le lien de la vidéo ici...'/>
+                                    </Form.Field>
+                                    <Segment basic>
+                                        {isLoading ? (
+                                            <Loader active inline="centered" />
+                                        ) : (
+                                        <Button primary onClick={() => {extractVideo();}} >Extraire</Button>
+                                        )}
+                                    </Segment>
+                                </Form>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
             </Segment>
         </>
     )
