@@ -11,6 +11,8 @@ function test(text : string) {
         },
         body: text,
         method: "POST",
+    }).then((res) => {
+        console.log(res);
     });
 }
 
