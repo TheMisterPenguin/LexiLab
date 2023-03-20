@@ -17,6 +17,19 @@ function getVideoId(url : string) {
       return null;
 }
 
+function sendId(id : string) {
+    fetch("http://localhost:3001/api/parseYoutubeVideo", {
+        headers: {
+            "Content-Type": "text/plain",
+            "Access-Control-Allow-Origin": "*",
+        },
+        body: id,
+        method: "POST",
+    }).then((res) => {
+        console.log(res);
+    });
+}
+
 const YoutubeConversion = () => {
     const [url, setUrl] = useState<string>("");
     const [videoId, setVideoId] = useState<string | null>(null);
@@ -50,8 +63,10 @@ const YoutubeConversion = () => {
         
         if (videoId == null)
             setUrlError("L'URL est invalide !");
-        else
+        else{
+            sendId(videoId);
             setUrlError('');
+        }
     }
 
     return (
