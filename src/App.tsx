@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { Header, Grid, Divider, Segment, Button, Container, Form, Input, Dropdown, Select, Icon, Image } from "semantic-ui-react";
+import { Header, Grid, Button, Icon, Image, Menu} from "semantic-ui-react";
 import TextConversion from "./TextConversion";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import PDFConversion from "./PDFConversion";
 import logo from "./assets/logo_2.svg";
 import MovieConversion from "./MovieConversion";
@@ -25,6 +24,9 @@ function getSelectedCategory(): buttonCategory | undefined {
 function App() {
 	const [category, setCategory] = useState<buttonCategory | undefined>();
 	const [isLoginOpen, setIsLoginOpen] = useState(false);
+	
+	const [activeItem,setactiveItem]=useState("home")
+  	const handleItemClick = (e: any, { name }: any) => setactiveItem(name)
 
   	const handleLoginClick = () => {
     	setIsLoginOpen(true);
@@ -41,21 +43,40 @@ function App() {
 	const navigate = useNavigate();
 	return (
 		<>
-
-			<Helmet>
-				<title>LexiLab</title>
-			</Helmet>
 			<Grid>
+				<Helmet>
+					<title>LexiLab</title>
+				</Helmet>
+			
 				<Grid.Row />
 				<Grid.Row />
 				<Grid.Row>
-					<Grid.Column width={16}>
+					<Grid.Column width={2}>
+					<Menu icon='labeled' vertical>
+						<Menu.Item
+							name='home'
+							active={activeItem === 'home'}
+							onClick={handleItemClick}
+						>
+						<Icon name='home' />
+							Home
+						</Menu.Item>
+
+						<Menu.Item
+						name='liste'
+						active={activeItem === 'liste'}
+						onClick={handleItemClick}
+						>
+						<Icon name='list' />
+							Liste
+						</Menu.Item>
+					</Menu>
+					</Grid.Column>
+					<Grid.Column width={14}>
   						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onClick={handleLoginClick}>
     						Se connecter
   						</Button><Login isOpen={isLoginOpen} onClose={handleLoginClose} />
 					</Grid.Column>
-				</Grid.Row>
-				<Grid.Row>
 				</Grid.Row>
 				<Grid.Row >
 					<Image centered src={logo} size="medium" wrapped />
