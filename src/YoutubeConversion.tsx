@@ -45,9 +45,11 @@ const YoutubeConversion = () => {
 
     function extractVideo(){
         //setIsLoading(true);
-        setVideoId(getVideoId(url))
+        const videoId = getVideoId(url);
+        setVideoId(videoId);
+        
         if (videoId == null)
-            setUrlError('url invalide !');
+            setUrlError("L'URL est invalide !");
         else
             setUrlError('');
     }
