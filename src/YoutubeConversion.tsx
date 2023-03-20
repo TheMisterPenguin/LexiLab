@@ -3,7 +3,6 @@ import { Segment, Form, Input, Button, Image, Grid,Loader } from 'semantic-ui-re
 import {Helmet} from "react-helmet";
 import YoutubeTranscript from 'youtube-transcript';
 
-
 /**
  * récupère l'id de la vidéo youtube grâce à son lien
  * @param url le lien de la vidéo youtube
@@ -18,42 +17,39 @@ function getVideoId(url : string) {
       return null;
 }
 
-
 const YoutubeConversion = () => {
-    const [url, setUrl] = useState<string>('');
+    const [url, setUrl] = useState<string>("");
     const [videoId, setVideoId] = useState<string | null>(null);
-    const [thumbnail, setThumbnail] = useState<string | undefined>(undefined);
+    const [thumbnail, setThumbnail] = useState<string | null>(null);
+    const [urlError, setUrlError] = useState('');
+    const [subtitleError, setSubtitleError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-
-    // actualiation de la miniature de la vidéo youtube
-    async function updateThumbnail() {
-        if (videoId !== null) {
-          const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/0.jpg`;
-          setThumbnail(thumbnailUrl);
-        }
-    }
-
-    async function fetchTranscript() {
-        const resultat = await YoutubeTranscript.fetchTranscript(url).then((res) => {
+    async function fetchTranscript(url : string) {
+        YoutubeTranscript.fetchTranscript(url).then((res) => {
             const parser = res.map((item) => item.text).join(' ');
-            console.log(parser)
-        });
+            console.log(parser);
+        })
     }
 
     useEffect(() => {
-          updateThumbnail();
-        }, [videoId]);
+        if (videoId != null)
+            setThumbnail(`https://img.youtube.com/vi/${videoId}/0.jpg`);
+        else
+            setThumbnail(null);
+    }, [videoId]);
 
     const InputChange = (e: any) => {
         setUrl(e.target.value);
     }
 
-    async function extractVideo(){
-        if (url !== '') {
-            setIsLoading(true);
-            setVideoId(getVideoId(url));
-        }
+    function extractVideo(){
+        //setIsLoading(true);
+        setVideoId(getVideoId(url))
+        if (videoId == null)
+            setUrlError('url invalide !');
+        else
+            setUrlError('');
     }
 
     return (
@@ -64,22 +60,22 @@ const YoutubeConversion = () => {
             <Segment>
                 <Grid columns={videoId === null ? 1 : 2}>  
                     <Grid.Row verticalAlign="middle">
-                       {videoId === null ? <></> : <Grid.Column width={7}>
-                            <Image  src={thumbnail} width={300}  />
+                        {videoId === null ? <></> : <Grid.Column width={7}>
+                        <Image  src={thumbnail} width={300}  />
                         </Grid.Column>}
-    
                         <Grid.Column>
                                 <Form>
-                                    <Form.Field>
+                                    <Form.Field error={urlError ? { content: "Please enter a value", pointing: "below" } : false}>
                                         <label>Saisir votre lien youtube :</label>
-                                        <Input type="url" onChange={InputChange} focus placeholder='Colle le lien de la vidéo ici...'/>
+                                        <Input onChange={InputChange} focus placeholder='Colle le lien de la vidéo ici...' error={urlError !== ''}/>
+                                        {urlError !== '' && (
+                                            <div className='ui pointing red basic label'>
+                                                {urlError}
+                                            </div>
+                                        )}
                                     </Form.Field>
                                     <Segment basic>
-                                        {isLoading ? (
-                                            <Loader active inline="centered" />
-                                        ) : (
-                                        <Button primary onClick={() => {extractVideo();}} >Extraire</Button>
-                                        )}
+                                        {isLoading ? (<Loader active inline="centered" />) : (<Button primary onClick={() => {extractVideo();}} >Extraire</Button>)}
                                     </Segment>
                                 </Form>
                         </Grid.Column>
