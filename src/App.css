@@ -17,6 +17,12 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+@media screen and (max-width: 620px) {
+  .category-buttons .button-text {
+    display: none;
+  }
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -40,41 +46,3 @@
   color: #888;
 }
 
-
-/* Pour MovieConversion */
-.movie-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 20px;
-}
-
-
-.movie-list .card {
-  margin: 0 10px 20px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.ui.card {
-  width: 300px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-.ui.card .image img {
-  object-fit: cover;
-  height: 200px;
-  
-}
-
-.ui.card .header {
-  font-size: 20px;
-  margin: 10px 0;
-}
-
-.ui.card .description {
-  margin: 10px 0;
-  line-height: 1.5;
-  font-size: 14px;
-}

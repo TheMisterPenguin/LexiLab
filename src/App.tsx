@@ -9,41 +9,10 @@ import MovieConversion from "./MovieConversion";
 import YoutubeConversion from "./YoutubeConversion";
 import { Helmet } from "react-helmet";
 import "./App.css";
+import Login from "./Login";
 
 /*Type qui peut prendre uniquement les chaines de caractères "text" "youtube" "movie" et "pdf"*/
 type buttonCategory = "text" | "youtube" | "movie" | "pdf";
-
-function Login() {
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-  
-	const handleSubmit = () => {
-	  console.log(`Identifiant: ${username} | Mot de passe: ${password}`);
-	  // Vous pouvez ici faire une requête pour vérifier les identifiants et mot de passe
-	};
-  
-	return (
-	  <Form onSubmit={handleSubmit}>
-		<Form.Field>
-		  <label>Identifiant</label>
-		  <Input
-			type="text"
-			value={username}
-			onChange={(e) => setUsername(e.target.value)}
-		  />
-		</Form.Field>
-		<Form.Field>
-		  <label>Mot de passe</label>
-		  <Input
-			type="password"
-			value={password}
-			onChange={(e) => setPassword(e.target.value)}
-		  />
-		</Form.Field>
-		<Button type="submit">Se connecter</Button>
-	  </Form>
-	);
-  }
 
 function getSelectedCategory(): buttonCategory | undefined {
 	const location = window.location.pathname;
@@ -53,24 +22,17 @@ function getSelectedCategory(): buttonCategory | undefined {
 	if (location.startsWith("/pdf")) return "pdf";
 }
 
-function test() {
-	const data = {
-		name: "Utilisateur" + Math.floor(Math.random() * 100),
-		age: Math.floor(Math.random() * (65 - 18 + 1)) + 18,
-		pays: "France"
-	};
-	fetch("http://localhost:3001/api/parseText", {
-		headers: {
-			"Content-Type": "text/plain",
-			"Access-Control-Allow-Origin": "*",
-		},
-		body: JSON.stringify(data),
-		method: "POST",
-	});
-}
-
 function App() {
 	const [category, setCategory] = useState<buttonCategory | undefined>();
+	const [isLoginOpen, setIsLoginOpen] = useState(false);
+
+  	const handleLoginClick = () => {
+    	setIsLoginOpen(true);
+  	};
+
+  	const handleLoginClose = () => {
+    	setIsLoginOpen(false);
+  	};
 
 	useEffect(() => {
 		setCategory(getSelectedCategory());
@@ -88,7 +50,9 @@ function App() {
 				<Grid.Row />
 				<Grid.Row>
 					<Grid.Column width={16}>
-  						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onClick={(e) => test()}>Se connecter</Button>
+  						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onClick={handleLoginClick}>
+    						Se connecter
+  						</Button><Login isOpen={isLoginOpen} onClose={handleLoginClose} />
 					</Grid.Column>
 				</Grid.Row>
 				<Grid.Row>
@@ -108,7 +72,7 @@ function App() {
 				<Grid.Row>
 					<Grid.Column width={2} />
 					<Grid.Column width={12}>
-						<Button.Group widths={4}>
+						<Button.Group widths={4} className="category-buttons">
 							<Button
 								size="big"
 								active={category === "text"}
@@ -116,7 +80,7 @@ function App() {
 									setCategory("text");
 									navigate("/texte");
 								}}>
-								<Icon name="keyboard outline" /> Texte
+								<Icon name="keyboard outline" /> <span className="button-text">Texte</span>
 							</Button>
 							<Button
 								size="big"
@@ -125,7 +89,7 @@ function App() {
 									setCategory("youtube");
 									navigate("/youtube");
 								}}>
-								<Icon name="youtube" /> Lien YouTube
+								<Icon name="youtube" /> <span className="button-text">Lien YouTube</span>
 							</Button>
 							<Button
 								size="big"
@@ -134,7 +98,7 @@ function App() {
 									setCategory("movie");
 									navigate("/film-serie");
 								}}>
-								<Icon name="film" /> Film / Série
+								<Icon name="film" /> <span className="button-text">Film / Série</span>
 							</Button>
 							<Button
 								size="big"
@@ -143,7 +107,7 @@ function App() {
 									setCategory("pdf");
 									navigate("/pdf");
 								}}>
-								<Icon name="file pdf outline" /> Document PDF
+								<Icon name="file pdf outline" /> <span className="button-text">Document PDF</span>
 							</Button>
 						</Button.Group>
 
@@ -151,8 +115,8 @@ function App() {
 					<Grid.Column width={2} />
 				</Grid.Row>
 				<Grid.Row textAlign="center">
-					<Grid.Column width={1} />
-					<Grid.Column width={14} textAlign="center">
+					<Grid.Column width={2} />
+					<Grid.Column width={12} textAlign="center">
 						<Routes>
 							<Route path="texte" element={<TextConversion />} />
 							<Route path="youtube" element={<YoutubeConversion />} />
@@ -160,7 +124,7 @@ function App() {
 							<Route path="pdf" element={<PDFConversion />} />
 						</Routes>
 					</Grid.Column>
-					<Grid.Column width={1} />
+					<Grid.Column width={2} />
 				</Grid.Row>
 			</Grid>
 		</>
