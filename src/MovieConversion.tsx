@@ -39,7 +39,7 @@ function MovieConversion() {
         enTete.append("api-key", api);
 
         var nomFilm = (movieData.inputMovie); //Récupère le titre du film
-
+        nomFilm = nomFilm.replaceAll(" ", "+");
         //-------------------------Requête de soustitre-------------------------
         var requete = new Request("https://api.opensubtitles.com/api/v1/subtitles?query="+nomFilm, {
             method: 'GET',
