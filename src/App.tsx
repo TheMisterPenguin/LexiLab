@@ -70,6 +70,13 @@ function App() {
 				<Grid.Row />
 				<Grid.Row />
 				<Grid.Row>
+					<Grid.Column width={2}/>
+					<Grid.Column width={12}>
+						<Header as="h2" textAlign="left">Extraire du vocabulaire :</Header>
+					</Grid.Column>
+					<Grid.Column width={2} />
+				</Grid.Row>
+				<Grid.Row>
 					<Grid.Column width={2} />
 					<Grid.Column width={12}>
 						<Button.Group widths={4} className="category-buttons">
