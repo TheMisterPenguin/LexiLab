@@ -1,40 +1,40 @@
-import {Segment, TextArea, Form, Button, Card, Table, TableCell, Checkbox} from "semantic-ui-react"
+import {Table, Checkbox} from "semantic-ui-react"
 import { useState } from "react";
-import WordCard from "./WordCard";
 
 var sortAscending = true;
 
+type word = {
+	mot: string,
+    niveau: string,
+    type: string,
+    traduction: string,
+};
 
-
-function ExtractWordGrid(props : typeof WordCard[]) {
-
-    const [words, setWords] = useState<{
-        mot: string,
-        niveau: string,
-        type: string,
-    }[]>([]);
+function ExtractWordGrid(props : word[] ) {
+    
+    const [words, setWords] = useState<word[]>(props);
 
     function sortByWord() {
-        setWords([]);
+        setWords([])
         console.log("Sorting ...")
         console.log([...words])
-        setWords([...words].sort((a, b) => a.mot.localeCompare(b.mot) * (sortAscending ? 1 : -1)));
+        setWords([...words].sort((a, b) => a.mot.localeCompare(b.mot) * (sortAscending ? 1 : -1)))
         sortAscending = !sortAscending;
     }
 
     function sortByLevel() {
-        setWords([]);
+        setWords([])
         console.log("Sorting ...")
         console.log([...words])
-        setWords([...words].sort((a, b) => a.niveau.localeCompare(b.niveau) * (sortAscending ? 1 : -1)));
+        setWords([...words].sort((a, b) => a.niveau.localeCompare(b.niveau) * (sortAscending ? 1 : -1)))
         sortAscending = !sortAscending;
     }
 
     function sortByType() {
-        setWords([]);
+        setWords([])
         console.log("Sorting ...")
         console.log([...words])
-        setWords([...words].sort((a, b) => a.type.localeCompare(b.type) * (sortAscending ? 1 : -1)));
+        setWords([...words].sort((a, b) => a.type.localeCompare(b.type) * (sortAscending ? 1 : -1)))
         sortAscending = !sortAscending;
     }
 
