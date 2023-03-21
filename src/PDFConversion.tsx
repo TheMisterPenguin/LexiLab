@@ -45,9 +45,15 @@ const PDFConversion = () => {
             setDisplayFileName(file.name);
             setIconColor("red");
             setFileProcessing(true);
-            PDF2Text(file).then(doc => {
+           /* PDF2Text(file).then(doc => {
                 setFileProcessing(false);
-            });
+            });*/
+			const fdata = new FormData();
+			fdata.append("file", file);
+			fetch("http://localhost:3001/api/parsePDF", {
+				body : fdata,
+				method : "POST",
+			})
         }
     }, [file]);
 
