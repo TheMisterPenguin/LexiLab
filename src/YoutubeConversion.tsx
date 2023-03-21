@@ -1,7 +1,6 @@
 import {useState, useEffect} from "react";
 import { Segment, Form, Input, Button, Image, Grid,Loader } from 'semantic-ui-react';
 import {Helmet} from "react-helmet";
-import YoutubeTranscript from 'youtube-transcript';
 
 /**
  * récupère l'id de la vidéo youtube grâce à son lien
@@ -21,7 +20,6 @@ function sendId(id : string) {
     fetch("http://localhost:3001/api/parseYoutubeVideo", {
         headers: {
             "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": "*",
         },
         body: id,
         method: "POST",
@@ -38,12 +36,7 @@ const YoutubeConversion = () => {
     const [subtitleError, setSubtitleError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    async function fetchTranscript(url : string) {
-        YoutubeTranscript.fetchTranscript(url).then((res) => {
-            const parser = res.map((item) => item.text).join(' ');
-            console.log(parser);
-        })
-    }
+
 
     useEffect(() => {
         if (videoId != null)
