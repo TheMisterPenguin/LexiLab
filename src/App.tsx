@@ -21,12 +21,20 @@ function getSelectedCategory(): buttonCategory | undefined {
 	if (location.startsWith("/pdf")) return "pdf";
 }
 
+function handleHomeClick() {
+  window.scrollTo(0, 0);
+}
+
 function App() {
 	const [category, setCategory] = useState<buttonCategory | undefined>();
 	const [isLoginOpen, setIsLoginOpen] = useState(false);
 	
 	const [activeItem,setactiveItem]=useState("home")
-  	const handleItemClick = (e: any, { name }: any) => setactiveItem(name)
+  	const handleItemClick = (e: any, { name }: any) => {
+		if(name === "home") handleHomeClick();
+		if(name === "liste") handleLoginClick();
+		setactiveItem(name)
+	}
 
   	const handleLoginClick = () => {
     	setIsLoginOpen(true);
@@ -47,69 +55,69 @@ function App() {
 				<Helmet>
 					<title>LexiLab</title>
 				</Helmet>
-			
 				<Grid.Row />
 				<Grid.Row />
-				<Grid.Row>
-					<Grid.Column width={2}>
-					<Menu icon='labeled' vertical>
-						<Menu.Item
+				<Grid.Row columns={2}>
+					<Grid.Column width={1} />
+					<Grid.Column width={8}>
+    					<Menu icon='labeled' fixed="top" stackable vertical style={{ marginTop: "6em", marginLeft: "15em" }}>
+							<Menu.Item
 							name='home'
 							active={activeItem === 'home'}
 							onClick={handleItemClick}
-						>
-						<Icon name='home' />
+							>
+							<Icon name='home' />
 							Home
-						</Menu.Item>
-
-						<Menu.Item
-						name='liste'
-						active={activeItem === 'liste'}
-						onClick={handleItemClick}
-						>
-						<Icon name='list' />
+							</Menu.Item>
+							<Menu.Item
+							name='liste'
+							active={activeItem === 'liste'}
+							onClick={handleItemClick}
+							>
+							<Icon name='list' />
 							Liste
-						</Menu.Item>
-					</Menu>
+							</Menu.Item>
+						</Menu>
 					</Grid.Column>
-					<Grid.Column width={14}>
-  						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onClick={handleLoginClick}>
-    						Se connecter
-  						</Button><Login isOpen={isLoginOpen} onClose={handleLoginClose} />
+					<Grid.Column width={7}>
+						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onClick={handleLoginClick}>
+							Se connecter
+						</Button>
+						<Login isOpen={isLoginOpen} onClose={handleLoginClose} />
 					</Grid.Column>
 				</Grid.Row>
-				<Grid.Row >
+				<Grid.Row>
 					<Image centered src={logo} size="medium" wrapped />
 				</Grid.Row>
 				<Grid.Row>
 					<Grid.Column width={2} />
 					<Grid.Column width={12}>
-						<Header textAlign="center">Votre laboratoire d'anglais personnalisé</Header>
+					<Header textAlign="center">Votre laboratoire d'anglais personnalisé</Header>
 					</Grid.Column>
 					<Grid.Column width={2} />
 				</Grid.Row>
 				<Grid.Row />
 				<Grid.Row />
 				<Grid.Row>
-					<Grid.Column width={2}/>
+					<Grid.Column width={2} />
 					<Grid.Column width={12}>
-						<Header as="h2" textAlign="left">Extraire du vocabulaire :</Header>
+					<Header as="h2" textAlign="left">Extraire du vocabulaire :</Header>
 					</Grid.Column>
 					<Grid.Column width={2} />
 				</Grid.Row>
 				<Grid.Row>
 					<Grid.Column width={2} />
 					<Grid.Column width={12}>
-						<Button.Group widths={4} className="category-buttons">
-							<Button
-								size="big"
-								active={category === "text"}
-								onClick={() => {
-									setCategory("text");
-									navigate("/texte");
-								}}>
-								<Icon name="keyboard outline" /> <span className="button-text">Texte</span>
-							</Button>
+					<Button.Group widths={4} className="category-buttons">
+						<Button
+							size="big"
+							active={category === "text"}
+							onClick={() => {
+								setCategory("text");
+								navigate("/texte");
+							}}>
+							<Icon name="keyboard outline" /> <span className="button-text">Texte</span>
+						</Button>
 							<Button
 								size="big"
 								active={category === "youtube"}
@@ -160,3 +168,4 @@ function App() {
 }
 
 export default App;
+

@@ -15,12 +15,16 @@ const Login = ({ isOpen, onClose }: Props) => {
       <Modal.Content>
         <Form>
           <Form.Field>
-            <label>Nom d'utilisateur</label>
-            <input placeholder="Nom d'utilisateur" />
+            <label>Adresse mail</label>
+            <input type="email" placeholder="Nom d'utilisateur" />
           </Form.Field>
           <Form.Field>
             <label>Mot de passe</label>
             <input type="password" placeholder="Mot de passe" />
+          </Form.Field>
+          <Form.Field>
+            <label>Ton niveau d'anglais</label>
+            <input type="text" placeholder="Level (A1,A2,etc)" />
           </Form.Field>
         </Form>
       </Modal.Content>
