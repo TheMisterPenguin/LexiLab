@@ -1,46 +1,66 @@
 import {Segment, Grid, Form, Input, Button, Card, Icon, Image, Container, Header,  Dimmer, Loader} from 'semantic-ui-react'
 import {Helmet} from "react-helmet";
-import {useEffect, useState} from "react";
+import {useEffect, useState} from "react"
 
+type Movie = {
+    id: number;
+    rating: number;
+    language: string;
+    age: number;
+    title: string;
+    image: string;
+    idFile: string;
+};
+  
+type MovieData = {
+    inputMovie: string;
+    movieResults: Movie[];
+};
 
+//Fonction qui vérifie si l'image n'a pas d'erreur
+async function imageValide(url: string): Promise<number> {
+    try {
+        const response = await fetch(url);
+  
+        if (response.status === 200) {
+            console.log('Le lien d\'image est valide et affichable.');
+            return 200;
+        }
+        else {
+            console.log('Le lien d\'image est invalide ou n\'est pas affichable.');
+        }
+    }
+    catch (error) {
+        console.error('Erreur de validation du lien d\'image:', error);
+    }
+    return -1; //ou une autre valeur que vous souhaitez retourner si le code de statut n'est pas 200
+}
 
 function MovieConversion() {
+    const [isLoading, setIsLoading] = useState(false);
 
-    const [movieData, setMovieData] = useState({
-        inputMovie: '',
-        resultMovie: '',
-        language: '',
-        rating: '',
-        age: '',
-        image: '',
-        subTitle: ''
-    });
+    const [movieData, setMovieData] = useState<MovieData>({
+        inputMovie: "",
+        movieResults: [], // Tableau vide pour stocker les résultats des films
+    });    
 
-    //A chaque fois que l'utilisateur modifie le contenu de l'input
-    const InputChange = (event: { target: { value: any; }; }) => {
-        setMovieData({...movieData, inputMovie: event.target.value});
-        //console.log(movieData.inputMovie);
-    }
-    
-  
+    //Récupérer le contenu de l'input
+    const InputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        setMovieData({ ...movieData, inputMovie: event.target.value });
+    };
+
     const fetchMovieConversion = async () => {
+        setIsLoading(true);
 
         const api = "5fYLrNmowziPVwKwhYS7TjE8goD4E7IU";
-    
         const enTete= new Headers({
-            "Access-Control-Request-Headers": "X_PINGOTHER, Content-Type",
-            "Content-Type": "text/plain, application/x-www-form-urlencoded, charset=UTF-8",
-            "Accept": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "*",
-            "vary": "Accept-Encoding",
-            "Accept-encoding": "gzip, deflate, br",       
+            "Accept": "application/json",    
         });
         enTete.append("api-key", api);
 
-        var nomFilm = (movieData.inputMovie); //Récupère le titre du film
+        var nomFilm = (movieData.inputMovie);
         nomFilm = nomFilm.replaceAll(" ", "+");
-        //-------------------------Requête de soustitre-------------------------
+
         var requete = new Request("https://api.opensubtitles.com/api/v1/subtitles?query="+nomFilm, {
             method: 'GET',
             headers: enTete,
@@ -48,126 +68,59 @@ function MovieConversion() {
         var reponse = await fetch(requete);
         var donnee = await reponse.json();
 
-        //Premier caractère du film en majuscule
+        //Mettre le premier caractère en majuscule
         var st = movieData.inputMovie;
         nomFilm = movieData.inputMovie.charAt(0).toUpperCase() + st.slice(1);
-
-        var compteur = 1;
-
-        //Parcours des données
+        var compteur = 0;
+        const results: Movie[] = []; // Créer un nouveau tableau pour stocker les résultats des films
         for(const res of donnee.data){
-            if(res.attributes.ratings > "7.0" && res.attributes.ratings < "9" && compteur == 1){
+            if(res.attributes.related_links != null){
+
                 var idFilm = res.id;
 
                 var note = res.attributes.ratings;
 
-                compteur = compteur -1;
-
                 var langue = res.attributes.language.toUpperCase();
 
-                //Annee de sortie
                 var annee = res.attributes.feature_details.year;
 
-                //Lien de l'image
+                var titre = res.attributes.feature_details.title;
+
+                    
                 for(const lien of res.attributes.related_links){
                     var lienImage = lien.img_url;
                 }
 
-                //Parcours le files pour obtenir le file_id de film
                 for(const file of res.attributes.files){
                     var idFile = file.file_id;
                 }
+
+                // Ajouter les résultats de chaque film au tableau
+                results.push({
+                    id: idFilm,
+                    language: langue,
+                    rating: note,
+                    age: annee,
+                    title: titre,
+                    image: lienImage,
+                    idFile: idFile
+                });
             }
         }
 
-        //-------------------------Requête de téléchargement-------------------------
-        requete = new Request("https://api.opensubtitles.com/api/v1/download?file_id="+idFile, {
-            method: 'POST',
-            headers: enTete
-        });
-
-        reponse = await fetch(requete);
-
-        var files = await reponse.json();
-            
-        var lien;
-        lien = files.link;
-
-        //Obtenir le texte du sous-titre
-        donnee = await fetch(lien);
-
-        var sousTitre = await donnee.text();
-
-        var result = '';
-
-        // Extraire le texte
-        const regexBalise = new RegExp('<\/?i>', 'g');
-        const regexChiffre = new RegExp('\\d{2}:\\d{2}:\\d{2},\\d{3} --> \\d{2}:\\d{2}:\\d{2},\\d{3}\\n(.*?)\\n', 'g');
-        const pointsDeb = new RegExp('/^\s*\.{3}/');
-        const pointFin = new RegExp('/(\s*\.{3})\s*$/');
-
-        compteur = 0;
-        let texteChiffre;
-        while(texteChiffre = regexChiffre.exec(sousTitre)){
-            result += texteChiffre[1].replace(regexBalise, '').replace(pointsDeb, '').replace(pointFin, '');
-            //console.log(texteChiffre[1].replace(regexBalise, '').replace(pointsDeb, '').replace(pointFin, ''));    
-            compteur++;
-        }
-
-        //Enregistrement des données
         setMovieData({
             ...movieData,
-            resultMovie: nomFilm,
-            language: langue,
-            rating: note,
-            age: annee,
-            image: lienImage,
-            subTitle: result
+            movieResults: results // Mettre à jour le tableau avec les résultats des films
         });
 
-    };
+        setIsLoading(false);
+    }
 
     return (
         <>
             <Helmet>
                 <title>Movie - LexiLab</title>
             </Helmet>
-
-            {movieData.resultMovie &&
-                <Grid columns={4}>
-                    <Grid.Column>
-                        <Segment basic textAlign="center">
-                            <Card>
-                                <Image src={movieData.image} wrapped ui={false} />
-                                <Card.Content>
-                                    <Card.Header>{movieData.resultMovie}</Card.Header>
-                                    <Card.Meta>
-                                        <span className='date'>{movieData.age}</span>
-                                    </Card.Meta>
-                                    <Card.Description>
-                                        {movieData.language}
-                                    </Card.Description>
-                                </Card.Content>
-                                <Card.Content extra>
-                                    <a>
-                                        <Icon name='edit' />
-                                        {movieData.rating}
-                                    </a>
-                                </Card.Content>
-                            </Card>
-                        </Segment>
-                    </Grid.Column>
-
-                    <Grid.Column>
-                        <Segment basic textAlign="center">
-                            <Container text>
-                                <Header as='h2'>Subtitle</Header>
-                                <p>{movieData.subTitle}</p>
-                            </Container>
-                        </Segment>
-                    </Grid.Column>
-                </Grid>
-            }
 
             <Segment>
                 <Form>
@@ -178,10 +131,42 @@ function MovieConversion() {
                 </Form>
 
                 <Segment basic textAlign="center">
-                    <Button primary onClick={() => {fetchMovieConversion();}}>Extraire</Button>
+                    {isLoading ? (
+                        <Loader active inline="centered" />
+                        ) : (
+                        <Button primary onClick={() => {fetchMovieConversion();}}>Extraire</Button>
+                    )}
                 </Segment>
+
             </Segment>
 
+            
+                <Grid columns={4}>
+                {movieData.movieResults.map((movie) => (
+                    <Grid.Column  key={movie.id}>
+                        <Segment basic textAlign="center">
+                            <Card>
+                                <Image src={movie.image} wrapped ui={false} />
+                                <Card.Content>
+                                    <Card.Header>{movie.title}</Card.Header>
+                                    <Card.Meta>
+                                        <span className='date'>{movie.age}</span>
+                                    </Card.Meta>
+                                    <Card.Description>
+                                        {movie.language}
+                                    </Card.Description>
+                                </Card.Content>
+                                <Card.Content extra>
+                                    <a>
+                                        <Icon name='edit' />
+                                        {movie.rating}
+                                    </a>
+                                </Card.Content>
+                            </Card>
+                        </Segment>
+                    </Grid.Column>
+                    ))}
+                </Grid>
         </>
     )
 }
