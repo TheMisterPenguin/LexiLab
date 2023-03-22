@@ -54,12 +54,11 @@ function ExtractWordGrid({props}:{props : word[]} ) {
                     </Table.Header>
                     <Table.Body>
                         {words.map((word) => (
-                            <Table.Row>
+                            <Table.Row key={word.mot}>
                                 <Table.Cell textAlign="center" collapsing><Checkbox /></Table.Cell>
                                 <Table.Cell textAlign="center">{word.mot}</Table.Cell>
                                 <Table.Cell textAlign="center"> {word.niveau}</Table.Cell>
                                 <Table.Cell textAlign="center">{word.type === "" ? "N/A" : word.type}</Table.Cell>
-
                             </Table.Row>
                             
                         ))}

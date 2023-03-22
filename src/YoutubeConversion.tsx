@@ -3,6 +3,7 @@ import { Segment, Form, Input, Button, Image, Grid,Loader } from 'semantic-ui-re
 import {Helmet} from "react-helmet";
 import ExtractWordGrid from "./ExtractWordGrid";
 
+
 /**
  * récupère l'id de la vidéo youtube grâce à son lien
  * @param url le lien de la vidéo youtube
@@ -17,28 +18,32 @@ function getVideoId(url : string) {
       return null;
 }
 
-function sendId(id : string) {
-    return fetch("http://localhost:3001/api/parseYoutubeVideo", {
-        headers: {
-            "Content-Type": "text/plain",
-        },
+/**
+ * obtient les mots de la vidéo youtube avec leur niveau et leur type
+ * @param id l'id de la vidéo youtube
+ * @returns null si la requête n'a pas abouti, sinon les mots de la vidéo
+ */
+async function getExtractedWords(id : string) {
+    const res = await fetch("http://localhost:3001/api/parseYoutubeVideo", {
+        headers: {"Content-Type": "text/plain",},
         body: id,
         method: "POST",
-    }).then((res) => {
-        console.log(res)
-        return res.json()
-    });
+    })
+
+    if(res.status !== 200) // si la requête n'a pas abouti
+        return null;
+    else
+        return res.json();
 }
+
 
 const YoutubeConversion = () => {
     const [url, setUrl] = useState<string>("");
     const [videoId, setVideoId] = useState<string | null>(null);
     const [thumbnail, setThumbnail] = useState<string | null>(null);
     const [urlError, setUrlError] = useState('');
-    const [subtitleError, setSubtitleError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [words, setWords] = useState<any[]>([]);
-
+    const [fetching, setFetching] = useState(false);
+    const [words, setWords] = useState<{mot: string, niveau: string, type: string, traduction: string}[]>([]);
 
     useEffect(() => {
         if (videoId != null)
@@ -47,24 +52,29 @@ const YoutubeConversion = () => {
             setThumbnail(null);
     }, [videoId]);
 
-    const InputChange = (e: any) => {
+    const updateUrl = (e: any) => {
         setUrl(e.target.value);
+        setUrlError('');
     }
 
     function extractVideo(){
-        //setIsLoading(true);
+        setFetching(true);
         const videoId = getVideoId(url);
         setVideoId(videoId);
-        
-        if (videoId == null)
-            setUrlError("L'URL est invalide !");
-        else{
-            sendId(videoId).then((res) => {
-                console.log(res)
-                setWords(res);});
-            setUrlError('');
-            console.log("fait chier");
+
+        if (videoId == null){
+            setUrlError("URL invalide ou non supportée !");
+            setFetching(false);
         }
+        else
+            getExtractedWords(videoId).then((res) => {
+                if(res === null)
+                    setUrlError("URL invalide ou non supportée !");
+                else{
+                    setWords(res);
+                }
+                setFetching(false);
+            });
     }
 
     return (
@@ -79,25 +89,27 @@ const YoutubeConversion = () => {
                         <Image  src={thumbnail} width={300}  />
                         </Grid.Column>}
                         <Grid.Column>
-                                <Form>
-                                    <Form.Field error={urlError ? { content: "Please enter a value", pointing: "below" } : false}>
-                                        <label>Saisir votre lien youtube :</label>
-                                        <Input onChange={InputChange} focus placeholder='Colle le lien de la vidéo ici...' error={urlError !== ''}/>
-                                        {urlError !== '' && (
-                                            <div className='ui pointing red basic label'>
-                                                {urlError}
-                                            </div>
-                                        )}
-                                    </Form.Field>
-                                    <Segment basic>
-                                        {isLoading ? (<Loader active inline="centered" />) : (<Button primary onClick={() => {extractVideo();}} >Extraire</Button>)}
-                                    </Segment>
-                                </Form>
+                            <Form>
+                                <Form.Field>
+                                    <label>Saisir votre lien youtube :</label>
+                                    <Input onChange={updateUrl} focus placeholder='Colle le lien de la vidéo ici...' error={urlError !== ''}/>
+                                    {urlError !== '' && (
+                                        <div className='ui pointing red basic label'>
+                                            {urlError}
+                                        </div>
+                                    )}
+                                </Form.Field>
+                                <Segment basic>
+                                    <Button loading={fetching} disabled={fetching} onClick={() => extractVideo()} primary>Extraire</Button>
+                                </Segment>
+                            </Form>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
             </Segment>
-            <ExtractWordGrid props={words as any} />
+            {words.length === 0 ? <></> :
+                <ExtractWordGrid props={words as any} />
+            }   
         </>
     )
 }
