@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
 import { Segment, Form, Input, Button, Image, Grid,Loader } from 'semantic-ui-react';
 import {Helmet} from "react-helmet";
+import ExtractWordGrid from "./ExtractWordGrid";
 
 /**
  * récupère l'id de la vidéo youtube grâce à son lien
@@ -17,14 +18,15 @@ function getVideoId(url : string) {
 }
 
 function sendId(id : string) {
-    fetch("http://localhost:3001/api/parseYoutubeVideo", {
+    return fetch("http://localhost:3001/api/parseYoutubeVideo", {
         headers: {
             "Content-Type": "text/plain",
         },
         body: id,
         method: "POST",
     }).then((res) => {
-        console.log(res);
+        console.log(res)
+        return res.json()
     });
 }
 
@@ -35,7 +37,7 @@ const YoutubeConversion = () => {
     const [urlError, setUrlError] = useState('');
     const [subtitleError, setSubtitleError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-
+    const [words, setWords] = useState<any[]>([]);
 
 
     useEffect(() => {
@@ -57,8 +59,11 @@ const YoutubeConversion = () => {
         if (videoId == null)
             setUrlError("L'URL est invalide !");
         else{
-            sendId(videoId);
+            sendId(videoId).then((res) => {
+                console.log(res)
+                setWords(res);});
             setUrlError('');
+            console.log("fait chier");
         }
     }
 
@@ -92,6 +97,7 @@ const YoutubeConversion = () => {
                     </Grid.Row>
                 </Grid>
             </Segment>
+            <ExtractWordGrid props={words as any} />
         </>
     )
 }

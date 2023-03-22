@@ -10,7 +10,7 @@ type word = {
     traduction: string,
 };
 
-function ExtractWordGrid(props : word[] ) {
+function ExtractWordGrid({props}:{props : word[]} ) {
     
     const [words, setWords] = useState<word[]>(props);
 
