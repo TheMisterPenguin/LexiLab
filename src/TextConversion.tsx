@@ -56,7 +56,7 @@ const TextConversion = () => {
                 </Form.Field>
                 </Form>
                 <Segment basic textAlign="center">
-                    <Button loading={fetching} onClick={() => getWord()} primary>Extraire</Button>
+                    <Button disabled={fetching} loading={fetching} onClick={() => getWord()} primary>Extraire</Button>
                 </Segment>
             </Segment>
             {words.length === 0 ? <></> :
