@@ -1,5 +1,5 @@
 import {Table, Checkbox} from "semantic-ui-react"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 var sortAscending = true;
 
@@ -13,6 +13,8 @@ type word = {
 function ExtractWordGrid({props}:{props : word[]} ) {
     
     const [words, setWords] = useState<word[]>(props);
+
+    useEffect(() => {}, []);
 
     function sortByWord() {
         setWords([])

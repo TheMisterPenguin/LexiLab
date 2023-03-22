@@ -1,21 +1,48 @@
-import {Segment, TextArea, Form, Button} from "semantic-ui-react"
+import {Segment, TextArea, Form, Button, Card, Table, TableCell, Checkbox} from "semantic-ui-react"
 import {Helmet} from "react-helmet";
 import { useState } from "react";
+import WordCard from "./WordCard";
+import ExtractWordGrid from "./ExtractWordGrid";
+
+var sortAscending = true;
 
 function test(text : string) {
     console.log(text);
-    fetch("http://localhost:3001/api/parseText", {
+    return fetch("http://localhost:3001/api/parseText", {
         headers: {
             "Content-Type": "text/plain",
             "Access-Control-Allow-Origin": "*",
         },
         body: text,
         method: "POST",
-    });
+    }).then((res) => {
+        return res.json();
+    })
 }
 
 const TextConversion = () => {
-    const [text, setText] = useState<string | number |undefined>("");
+    const [text, setText] = useState<string | number |undefined>();
+    const [words, setWords] = useState<{
+        mot: string,
+        niveau: string,
+        type: string,
+    }[]>([]);
+
+    const [fetching, setFetching] = useState(false);
+
+    
+
+    function getWord(){
+        setFetching(true);
+        if(text !== ""){
+            test(text as string).then((res) => {
+                console.log(res);   
+                setWords(res);
+                setFetching(false);
+            });
+        }
+    }
+
     return (
         <>
             <Helmet>
@@ -29,9 +56,13 @@ const TextConversion = () => {
                 </Form.Field>
                 </Form>
                 <Segment basic textAlign="center">
-                    <Button onClick={(e) => test(text)} primary>Extraire</Button>
+                    <Button loading={fetching} onClick={() => getWord()} primary>Extraire</Button>
                 </Segment>
             </Segment>
+            {words.length === 0 ? <></> :
+                <ExtractWordGrid props={words as any} />
+            }   
+            
         </>
     )
 }
