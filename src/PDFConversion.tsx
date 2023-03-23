@@ -2,35 +2,6 @@ import {useRef, useState, useEffect, useId} from "react";
 import {Header, Segment, Icon, Button} from "semantic-ui-react";
 import {Helmet} from "react-helmet";
 
-type PDFContent = {
-	filename: String;
-	pages: Array<String>;
-};
-
-async function PDF2Text(file: File) {
-	const document: PDFContent = {filename: "", pages: []};
-	document.filename = file.name;
-	// On récupère le contenu du fichier
-	const buffer = await file.arrayBuffer();
-	// On récupère le contenu du document PDF
-	// @ts-ignore
-	const pdf = await pdfjsLib.getDocument(buffer).promise;
-	console.log(pdf.numPages);
-	// On lit toutes les pages
-	for (let i = 1; i < pdf.numPages; i++) {
-		console.log(i);
-		let page = await pdf.getPage(i);
-		let contenu = await page.getTextContent();
-		document.pages[i] += contenu.items
-			.map((s: any) => {
-				return s.str;
-			})
-			.join(" ");
-	}
-	console.log(document);
-    return document;
-}
-
 const PDFConversion = () => {
 	const inputRef = useRef(null);
     const [file, setFile] = useState<File | undefined>(undefined);
@@ -45,9 +16,15 @@ const PDFConversion = () => {
             setDisplayFileName(file.name);
             setIconColor("red");
             setFileProcessing(true);
-            PDF2Text(file).then(doc => {
+           /* PDF2Text(file).then(doc => {
                 setFileProcessing(false);
-            });
+            });*/
+			const fdata = new FormData();
+			fdata.append("file", file);
+			fetch("http://localhost:3001/api/parsePDF", {
+				body : fdata,
+				method : "POST",
+			})
         }
     }, [file]);
 
