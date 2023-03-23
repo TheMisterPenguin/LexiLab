@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import { Header, Grid, Button, Icon, Image, Menu} from "semantic-ui-react";
+import {useEffect, useState} from "react";
+import {Header, Grid, Button, Icon, Image, Menu} from "semantic-ui-react";
 import TextConversion from "./TextConversion";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import PDFConversion from "./PDFConversion";
 import logo from "./assets/logo_2.svg";
 import MovieConversion from "./MovieConversion";
 import YoutubeConversion from "./YoutubeConversion";
-import { Helmet } from "react-helmet";
+import {Helmet} from "react-helmet";
 import "./App.css";
 import Login from "./Login";
 
@@ -22,27 +22,27 @@ function getSelectedCategory(): buttonCategory | undefined {
 }
 
 function handleHomeClick() {
-  window.scrollTo(0, 0);
+	window.scrollTo(0, 0);
 }
 
 function App() {
 	const [category, setCategory] = useState<buttonCategory | undefined>();
 	const [isLoginOpen, setIsLoginOpen] = useState(false);
-	
-	const [activeItem,setactiveItem]=useState("home")
-  	const handleItemClick = (e: any, { name }: any) => {
-		if(name === "home") handleHomeClick();
-		if(name === "liste") handleLoginClick();
-		setactiveItem(name)
-	}
 
-  	const handleLoginClick = () => {
-    	setIsLoginOpen(true);
-  	};
+	const [activeItem, setactiveItem] = useState("home");
+	const handleItemClick = (e: any, {name}: any) => {
+		if (name === "home") handleHomeClick();
+		if (name === "liste") handleLoginClick();
+		setactiveItem(name);
+	};
 
-  	const handleLoginClose = () => {
-    	setIsLoginOpen(false);
-  	};
+	const handleLoginClick = () => {
+		setIsLoginOpen(true);
+	};
+
+	const handleLoginClose = () => {
+		setIsLoginOpen(false);
+	};
 
 	useEffect(() => {
 		setCategory(getSelectedCategory());
@@ -57,30 +57,22 @@ function App() {
 				</Helmet>
 				<Grid.Row />
 				<Grid.Row />
-				<Grid.Row columns={2}>
-					<Grid.Column width={1} />
-					<Grid.Column width={8}>
-    					<Menu icon='labeled' fixed="top" stackable vertical style={{ marginTop: "6em", marginLeft: "15em" }}>
-							<Menu.Item
-							name='home'
-							active={activeItem === 'home'}
-							onClick={handleItemClick}
-							>
-							<Icon name='home' />
-							Home
+				<Grid.Row>
+					<Grid.Column width={2}>
+						<Menu icon="labeled" fixed="top" stackable vertical>
+							<Menu.Item name="home" active={activeItem === "home"} onClick={handleItemClick}>
+								<Icon name="home" />
+								Home
 							</Menu.Item>
-							<Menu.Item
-							name='liste'
-							active={activeItem === 'liste'}
-							onClick={handleItemClick}
-							>
-							<Icon name='list' />
-							Liste
+							<Menu.Item name="liste" active={activeItem === "liste"} onClick={handleItemClick}>
+								<Icon name="list" />
+								Liste
 							</Menu.Item>
 						</Menu>
 					</Grid.Column>
-					<Grid.Column width={7}>
-						<Button floated="right" style={{ backgroundColor: "#FFB155", color: "white" }} onClick={handleLoginClick}>
+					<Grid.Column width={12}/>
+					<Grid.Column width={2}>
+						<Button style={{backgroundColor: "#FFB155", color: "white"}} onClick={handleLoginClick}>
 							Se connecter
 						</Button>
 						<Login isOpen={isLoginOpen} onClose={handleLoginClose} />
@@ -92,7 +84,7 @@ function App() {
 				<Grid.Row>
 					<Grid.Column width={2} />
 					<Grid.Column width={12}>
-					<Header textAlign="center">Votre laboratoire d'anglais personnalisé</Header>
+						<Header textAlign="center">Votre laboratoire d'anglais personnalisé</Header>
 					</Grid.Column>
 					<Grid.Column width={2} />
 				</Grid.Row>
@@ -101,23 +93,25 @@ function App() {
 				<Grid.Row>
 					<Grid.Column width={2} />
 					<Grid.Column width={12}>
-					<Header as="h2" textAlign="left">Extraire du vocabulaire :</Header>
+						<Header as="h2" textAlign="left">
+							Extraire du vocabulaire :
+						</Header>
 					</Grid.Column>
 					<Grid.Column width={2} />
 				</Grid.Row>
 				<Grid.Row>
 					<Grid.Column width={2} />
 					<Grid.Column width={12}>
-					<Button.Group widths={4} className="category-buttons">
-						<Button
-							size="big"
-							active={category === "text"}
-							onClick={() => {
-								setCategory("text");
-								navigate("/texte");
-							}}>
-							<Icon name="keyboard outline" /> <span className="button-text">Texte</span>
-						</Button>
+						<Button.Group widths={4} className="category-buttons">
+							<Button
+								size="big"
+								active={category === "text"}
+								onClick={() => {
+									setCategory("text");
+									navigate("/texte");
+								}}>
+								<Icon name="keyboard outline" /> <span className="button-text">Texte</span>
+							</Button>
 							<Button
 								size="big"
 								active={category === "youtube"}
@@ -146,7 +140,6 @@ function App() {
 								<Icon name="file pdf outline" /> <span className="button-text">Document PDF</span>
 							</Button>
 						</Button.Group>
-
 					</Grid.Column>
 					<Grid.Column width={2} />
 				</Grid.Row>
@@ -168,4 +161,3 @@ function App() {
 }
 
 export default App;
-
