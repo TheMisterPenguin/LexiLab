@@ -11,128 +11,77 @@ type Movie = {
     idFile: number;
 };
 
-type MovieData = {
-    inputMovie: string;
-    movieResults: Movie[];
-};
-
-/*function sousTitre(id: number) {
-    const [idFile, setIdFile] = useState<number>(0);
-
-    setIdFile(id);
-
-    console.log(idFile);
-    return <p>ID de fichier sélectionné : {idFile}</p>;
-}*/
-
-//Fonction qui vérifie si l'image est éxploitable
+//Fonction qui vérifie si l'image est exploitable
 async function imageValide(url: string){
     try {
-        const response = await fetch(url, { method: 'HEAD' });
-        return response.ok;
+        fetch(url, { method: 'HEAD' }).then((response) => {
+            return response.ok;
+        });
     }
     catch (error) {
         return false;
     }
 }
 
-function MovieConversion() {
-    const [isLoading, setIsLoading] = useState(false);
+async function getSearchedMovies(movieTitle : string) {
+    const res = await fetch("http://localhost:3001/api/getSearchedMovies", {
+        headers: {"Content-Type": "text/plain",},
+        body: movieTitle,
+        method: "POST",
+    })
+    if(res.status !== 200) // si la requête n'a pas abouti
+        return null;
+    else
+        return await res.json();
+}
 
-    const [movieData, setMovieData] = useState<MovieData>({
-        inputMovie: "",
-        movieResults: [], // Tableau vide pour stocker les résultats des films
+function getSortedMovies(movies : Movie[]) {
+    console.log(movies);
+    //Supprime les objets qui ont les mêmes titres
+    var uniqueMovies = movies.filter(
+        (item, index, array) => array.findIndex((obj) => obj.title === item.title) === index );
+    
+    console.log(movies);
+    //Vérifie si l'image est exploitable(différents de 404), et ajouter le film dans le tableau
+    uniqueMovies.filter((movie) => {
+        return imageValide(movie.image);
     });
 
+    console.log(uniqueMovies);
+    return uniqueMovies;
+}
+
+function MovieConversion() {
+    const [fetching, setFetching] = useState(false);
+    const [movieTitle, setMovieTitle] = useState<string>("");
+    let [movies, setMovies] = useState<Movie[]>([]);
+    const [idFile, setIdFile] = useState<number>(0);
+
     //Récupérer le contenu de l'input
-    const InputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        setMovieData({ ...movieData, inputMovie: event.target.value });
-        //onChange={(e) => {setMovieData({ ...movieData, inputMovie: e.target.value })}}
-    };
-    
-    const fetchMovieConversion = async () => {
-        setIsLoading(true);
-
-        const enTete = new Headers({
-            "api-key": "5fYLrNmowziPVwKwhYS7TjE8goD4E7IU",
-            "Content-Type": "text/plain, application/x-www-form-urlencoded, charset=UTF-8",
-            "Accept": "application/json",
-            "Accept-encoding": "gzip, deflate, br",
-        });
-
-        var nomFilm = (movieData.inputMovie);
-        nomFilm = nomFilm.replaceAll(" ", "+");
-
-        var requete = new Request("https://api.opensubtitles.com/api/v1/subtitles?query=" + nomFilm, {
-            method: 'GET',
-            headers: enTete,
-        });
-        var reponse = await fetch(requete);
-        var donnee = await reponse.json();
-        console.log(donnee);
-
-        var tabTemp: Movie[] = []; //Création d'une table temporaire pour récupérer les films
-
-        for (const res of donnee.data) {
-            if (res.attributes.related_links != null) {
-
-                var idFilm = res.id;
-                var note = res.attributes.ratings;
-                var annee = res.attributes.feature_details.year;
-                var titre = res.attributes.feature_details.title;
-                var lienImage = res.attributes.related_links[0].img_url;
-                var idFile = res.attributes.files[0].file_id;
-
-                tabTemp.push({
-                    id: idFilm,
-                    rating: note,
-                    age: annee,
-                    title: titre,
-                    image: lienImage,
-                    idFile: idFile
-                });
-            }
-        }
-
-        //Supprime les objets qui ont les mêmes titres et garder l'objet qui a la plus haute note
-        const supprimeRedondance: { [title: string]: Movie } = tabTemp.reduce((nbValeur, valActuel) => {
-            if (valActuel.title in nbValeur) {
-                if (valActuel.rating > nbValeur[valActuel.title].rating) {
-                    nbValeur[valActuel.title] = valActuel;
-                }
-            }
-            else {
-                nbValeur[valActuel.title] = valActuel;
-            }
-            return nbValeur;
-        }, {} as { [title: string]: Movie });
-
-        //Vérifie si l'image est exploitable(différents de 404), et ajouter l'objet
-        const results: Movie[] = await Promise.all(
-            Object.values(supprimeRedondance).map(async movie => {
-                const status = await imageValide(movie.image);
-                if (status) {
-                    return movie;
-                }
-                return null;
-            })
-        ).then(movies => movies.filter(movie => movie !== null) as Movie[]);
-
-        //Récupére les résultats
-        setMovieData({
-            ...movieData,
-            movieResults: results // Mettre à jour le tableau avec les résultats des films
-        });
-
-        setIsLoading(false);
+    const InputChange = (e : any) => {
+        setMovieTitle(e.target.value );
     }
 
-    const [idFile, setIdFile] = useState<number>(0);
-    
     const handleMovie = (id: number) => {
         setIdFile(id);
-        console.log(id);
-    };
+    }
+    
+    const fetchMovieConversion = async () => {
+        setFetching(true);
+        movieTitle.replaceAll(" ", "+");
+
+        getSearchedMovies(movieTitle).then((res) => {
+            if(res === null)
+                console.log("Erreur lors de la récupération des films");
+            else {
+                setMovies(res);
+                console.log(movies);
+            }
+        
+        });
+        setFetching(false);
+    }
+    
 
     return (
         <>
@@ -144,12 +93,12 @@ function MovieConversion() {
                 <Form>
                     <Form.Field>
                         <label>Saisir votre film :</label>
-                        <Input value={movieData.inputMovie} onChange={InputChange} placeholder='Rechercher...' />
+                        <Input value={movieTitle} onChange={InputChange} placeholder='Rechercher...' />
                     </Form.Field>
                 </Form>
 
                 <Segment basic textAlign="center">
-                    {isLoading ? (
+                    {fetching ? (
                         <Loader active inline="centered" />
                     ) : (
                         <Button primary onClick={() => { fetchMovieConversion(); }}>Extraire</Button>
@@ -158,7 +107,7 @@ function MovieConversion() {
             </Segment>
 
             <Grid columns={3}>
-                {movieData.movieResults.map((movie) => (
+                {movies.map((movie) => (
                     <Grid.Column key={movie.id}>
                         <Segment basic textAlign="center">
                             <Card value = {idFile} onClick={() => handleMovie(movie.idFile)}>
