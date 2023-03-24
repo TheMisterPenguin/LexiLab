@@ -79,7 +79,7 @@ function App() {
 					</Grid.Column>
 				</Grid.Row>
 				<Grid.Row>
-					<Image centered src={logo} size="medium" wrapped />
+					<Image centered src={logo} size="medium" alt="logo LexiLab" wrapped />
 				</Grid.Row>
 				<Grid.Row>
 					<Grid.Column width={2} />

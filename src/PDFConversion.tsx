@@ -50,7 +50,7 @@ const PDFConversion = () => {
             });*/
 			const fdata = new FormData();
 			fdata.append("file", file);
-			fetch("http://localhost:3001/api/parsePDF", {
+			fetch(`http://${import.meta.env.VITE_SERVER_URL}/api/parsePDF`, {
 				body : fdata,
 				method : "POST",
 			})
