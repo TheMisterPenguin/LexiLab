@@ -24,7 +24,7 @@ function getVideoId(url : string) {
  * @returns null si la requête n'a pas abouti, sinon les mots de la vidéo
  */
 async function getExtractedWords(id : string) {
-    const res = await fetch("http://localhost:3001/api/parseYoutubeVideo", {
+    const res = await fetch(`http://${import.meta.env.VITE_SERVER_URL}/api/parseYoutubeVideo`, {
         headers: {"Content-Type": "text/plain",},
         body: id,
         method: "POST",

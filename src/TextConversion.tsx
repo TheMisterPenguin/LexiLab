@@ -8,7 +8,7 @@ var sortAscending = true;
 
 function test(text : string) {
     console.log(text);
-    return fetch("http://localhost:3001/api/parseText", {
+    return fetch(`http://${import.meta.env.VITE_SERVER_URL}/api/parseText`, {
         headers: {
             "Content-Type": "text/plain",
             "Access-Control-Allow-Origin": "*",
