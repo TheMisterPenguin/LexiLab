@@ -146,7 +146,7 @@ function MovieConversion() {
                     <Grid.Column  key={movie.id}>
                         <Segment basic textAlign="center">
                             <Card>
-                                <Image src={movie.image} wrapped ui={false} />
+                                <Image src={movie.image} wrapped ui={false} alt={movie.title} />
                                 <Card.Content>
                                     <Card.Header>{movie.title}</Card.Header>
                                     <Card.Meta>

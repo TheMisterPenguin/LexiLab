@@ -83,10 +83,10 @@ const YoutubeConversion = () => {
                 <title>Youtube - LexiLab</title>
             </Helmet>
             <Segment>
-                <Grid columns={videoId === null ? 1 : 2}>  
+                <Grid columns={videoId === null ? 1 : 2}>
                     <Grid.Row verticalAlign="middle">
                         {videoId === null ? <></> : <Grid.Column width={7}>
-                        <Image  src={thumbnail} width={300}  />
+                        <Image  src={thumbnail} width={300} alt="miniature vidéo youtube"/>
                         </Grid.Column>}
                         <Grid.Column>
                             <Form>
