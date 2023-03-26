@@ -68,6 +68,10 @@ function App() {
 								<Icon name="list" />
 								Liste
 							</Menu.Item>
+							<Menu.Item name="tasks" active={activeItem === "tasks"} onClick={handleItemClick}>
+								<Icon name="tasks" />
+								S'entrainer
+							</Menu.Item>
 						</Menu>
 					</Grid.Column>
 					<Grid.Column width={12}/>
