@@ -12,7 +12,11 @@ type Movie = {
     idFile: string;
 };
 
-//Récupérer les films qui correspondent à la recherche
+/**
+ * Récupérer les films qui correspondent à la recherche de l'utilisateur
+ * @param movieTitle le nom du film
+ * @returns null si le lien n'est pas valide, sinon les données des films
+ */
 async function getSearchedMovies(movieTitle : string) {
     const res = await fetch("http://localhost:3001/api/getSearchedMovies", {
         headers: {"Content-Type": "text/plain",},
@@ -26,7 +30,11 @@ async function getSearchedMovies(movieTitle : string) {
         return await res.json();
 }
 
-//Récupérer les sous-titres du film sélectionné
+/**
+ * Récupérer les sous-titres du film sélectionné
+ * @param id l'id file(pour les sous-titres) du film
+ * @returns null si la requête n'a pas abouti, sinon les sous-tires
+ */
 async function getDownload(id : string){
     const res = await fetch("http://localhost:3001/api/movieDownload", {
         headers: {"Content-Type": "text/plain",},
@@ -77,12 +85,12 @@ function MovieConversion() {
     const handleMovie = (id: string, image: string) => {
         setFetching(true);
         setSearchBar("non");
-        setImage(image); //récupére l'image
+        setImage(image); //récupère l'image
         setAfficher('ok');
-        setSelectedId(id);
+        setSelectedId(id); //récupère l'id file
         setMovieError('');
 
-        // Récupérer les sous-titres du film sélectionné
+        // Récupèrer les sous-titres du film sélectionné
         getDownload(id).then((res) => {
             if(res === null){
                 setMovieError("Erreur lors de la récupération des sous titres");
