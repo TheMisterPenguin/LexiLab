@@ -38,36 +38,37 @@ async function getExtractedWords(id : string) {
 
 
 const YoutubeConversion = () => {
-    const [url, setUrl] = useState<string>("");
-    const [videoId, setVideoId] = useState<string | null>(null);
-    const [thumbnail, setThumbnail] = useState<string | null>(null);
-    const [urlError, setUrlError] = useState('');
-    const [fetching, setFetching] = useState(false);
-    const [words, setWords] = useState<{mot: string, niveau: string, type: string, traduction: string}[]>([]);
+    const [url, setUrl] = useState<string>(""); // url de la vidéo youtube
+    const [videoId, setVideoId] = useState<string | null>(null); // id de la vidéo youtube
+    const [thumbnail, setThumbnail] = useState<string | null>(null); // miniature de la vidéo youtube
+    const [urlError, setUrlError] = useState(''); // message d'erreur de l'url
+    const [fetching, setFetching] = useState(false); // true si on est en train de récupérer les mots de la vidéo
+    const [words, setWords] = useState<{mot: string, niveau: string, type: string, traduction: string}[]>([]); // mots de la vidéo
 
     useEffect(() => {
         if (videoId != null)
-            setThumbnail(`https://img.youtube.com/vi/${videoId}/0.jpg`);
+            setThumbnail(`https://img.youtube.com/vi/${videoId}/0.jpg`); // on récupère la miniature de la vidéo
         else
-            setThumbnail(null);
+            setThumbnail(null); 
     }, [videoId]);
 
     const updateUrl = (e: any) => {
         setUrl(e.target.value);
-        setUrlError('');
+        setUrlError(''); 
     }
 
     function extractVideo(){
-        setFetching(true);
+        setFetching(true); 
+        setWords([]); // on vide les mots de la vidéo précédente
         const videoId = getVideoId(url);
-        setVideoId(videoId);
+        setVideoId(videoId); 
 
         if (videoId == null){
             setUrlError("URL invalide ou non supportée !");
             setFetching(false);
         }
         else
-            getExtractedWords(videoId).then((res) => {
+            getExtractedWords(videoId).then((res) => { // on récupère les mots de la vidéo
                 if(res === null)
                     setUrlError("URL invalide ou non supportée !");
                 else{
@@ -83,7 +84,7 @@ const YoutubeConversion = () => {
                 <title>Youtube - LexiLab</title>
             </Helmet>
             <Segment>
-                <Grid columns={videoId === null ? 1 : 2}>
+                <Grid columns={videoId === null ? 1 : 2}> 
                     <Grid.Row verticalAlign="middle">
                         {videoId === null ? <></> : <Grid.Column width={7}>
                         <Image  src={thumbnail} width={300} alt="miniature vidéo youtube"/>
@@ -91,7 +92,7 @@ const YoutubeConversion = () => {
                         <Grid.Column>
                             <Form>
                                 <Form.Field>
-                                    <label>Saisir votre lien youtube :</label>
+                                    <label>coller votre lien youtube :</label>
                                     <Input onChange={updateUrl} focus placeholder='Colle le lien de la vidéo ici...' error={urlError !== ''}/>
                                     {urlError !== '' && (
                                         <div className='ui pointing red basic label'>

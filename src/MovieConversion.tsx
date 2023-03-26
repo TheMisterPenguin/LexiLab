@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { useState } from "react"
 import ExtractWordGrid from "./ExtractWordGrid";
 
-
+// type Movie
 type Movie = {
     id: number;
     age: number;
@@ -12,6 +12,7 @@ type Movie = {
     idFile: string;
 };
 
+//Récupérer les films qui correspondent à la recherche
 async function getSearchedMovies(movieTitle : string) {
     const res = await fetch("http://localhost:3001/api/getSearchedMovies", {
         headers: {"Content-Type": "text/plain",},
@@ -25,6 +26,7 @@ async function getSearchedMovies(movieTitle : string) {
         return await res.json();
 }
 
+//Récupérer les sous-titres du film sélectionné
 async function getDownload(id : string){
     const res = await fetch("http://localhost:3001/api/movieDownload", {
         headers: {"Content-Type": "text/plain",},
@@ -39,16 +41,15 @@ async function getDownload(id : string){
 }
 
 function MovieConversion() {
-    const [fetching, setFetching] = useState(false);
-    const [movieTitle, setMovieTitle] = useState<string>("");
-    let [movies, setMovies] = useState<Movie[]>([]);
-    const [idFile, setIdFile] = useState<string>("");
-    const [subtitle, setSubtitle] = useState<{mot: string, niveau: string, type: string, traduction: string}[]>([]);
-    const [movieError, setMovieError] = useState('');
-    const [selectedId, setSelectedId] = useState<string | null>(null);
-    const [afficher, setAfficher] = useState<string | null>(null);
-    const [image, setImage] = useState<string | ''>('');
-    const [searchBar, setSearchBar] = useState<string | null>(null);
+    const [fetching, setFetching] = useState(false); // true si on est en train de récupérer les mots de la vidéo
+    const [movieTitle, setMovieTitle] = useState<string>(""); // titre du film
+    let [movies, setMovies] = useState<Movie[]>([]);  // les films qui correspondent à la recherche
+    const [subtitle, setSubtitle] = useState<{mot: string, niveau: string, type: string, traduction: string}[]>([]); // sous-titres du film sélectionné
+    const [movieError, setMovieError] = useState(''); 
+    const [selectedId, setSelectedId] = useState<string | null>(null); // l'id du film sélectionné
+    const [afficher, setAfficher] = useState<string | null>(null); // afficher ou non le bouton de téléchargement
+    const [image, setImage] = useState<string | ''>(''); // image du film sélectionné
+    const [searchBar, setSearchBar] = useState<string | null>(null); // afficher ou non la barre de recherche
 
 
     //Récupérer le contenu de l'input
@@ -57,6 +58,7 @@ function MovieConversion() {
         setMovieError('');
     }
     
+    //Récupérer les films qui correspondent à la recherche
     const fetchMovieConversion = async () => {
         setFetching(true);
         movieTitle.replaceAll(" ", "+");
@@ -75,17 +77,13 @@ function MovieConversion() {
     const handleMovie = (id: string, image: string) => {
         setFetching(true);
         setSearchBar("non");
-
-        setImage(image); //récupére image
-        setIdFile(id); //récupére le id file
-        console.log(id);
-
+        setImage(image); //récupére l'image
         setAfficher('ok');
-
         setSelectedId(id);
         setMovieError('');
 
-        getDownload(idFile).then((res) => {
+        // Récupérer les sous-titres du film sélectionné
+        getDownload(id).then((res) => {
             if(res === null){
                 setMovieError("Erreur lors de la récupération des sous titres");
                 setAfficher(null);
@@ -129,14 +127,14 @@ function MovieConversion() {
                     {movies.map((movie) => (
                         <Grid.Column key={movie.id}>
                             <Segment basic textAlign="center">
-                                <Card value = {idFile} onClick={() => handleMovie(movie.idFile, movie.image)}>
+                                <Card value = {movie.idFile} onClick={() => handleMovie(movie.idFile, movie.image)}>
                                     {movie.idFile === selectedId && movieError !== '' && (
                                         <div className='ui pointing red basic label'>
                                             {movieError}
                                         </div>
                                     )}
 
-                                    <Image src={movie.image} />
+                                    <Image src={movie.image} alt={movie.title} />
 
                                     <Card.Content>
                                         <Card.Header>{movie.title}</Card.Header>
@@ -150,31 +148,33 @@ function MovieConversion() {
                     ))}
                 </Grid>
                 :
-                <Segment>
-                    {selectedId === null && subtitle.length === 0 ? <></> :
-                        <Grid width={10} columns={2}>
-                            <Grid.Column>
-                            <Image  src={image}/>
-                            </Grid.Column>
-
-                            <Grid.Column>
-                                <Segment>
-                                    <Form>
-                                        <Form.Field>
-                                            <label>Saisir votre film :</label>
-                                            <Input value={movieTitle} onChange={ InputChange } placeholder='Rechercher...' />
-                                        </Form.Field>
-                                    </Form>
-
-                                    <Segment basic textAlign="center">
-                                        <Button loading={fetching} disabled={fetching} onClick={() => {fetchMovieConversion(); }} primary>Extraire</Button>
-                                    </Segment>
-                                </Segment>
-                            </Grid.Column>
-                            <ExtractWordGrid props={subtitle as any} />
-                        </Grid>
+                <>
+                    <Segment>
+                        {selectedId === null ? <></> :
+                            <Grid columns={2}>
+                                <Grid.Row verticalAlign='middle'>
+                                    <Grid.Column width={6}>
+                                        <Image  src={image} alt={movieTitle}/>
+                                    </Grid.Column>
+                                    <Grid.Column>
+                                        <Form>
+                                            <Form.Field>
+                                                <label>Saisir votre film :</label>
+                                                <Input value={movieTitle} onChange={ InputChange } placeholder='Rechercher...' />
+                                            </Form.Field>
+                                            <Segment basic textAlign="center">
+                                                <Button loading={fetching} disabled={fetching} onClick={() => {fetchMovieConversion(); }} primary>Extraire</Button>
+                                            </Segment>
+                                        </Form>
+                                    </Grid.Column>
+                                </Grid.Row>
+                            </Grid>
+                        }
+                    </Segment>
+                    {subtitle.length === 0 ? <></> :
+                        <ExtractWordGrid props={subtitle as any} />
                     }
-                </Segment>
+                </>
             }
         </>
     )
